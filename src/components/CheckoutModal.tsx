@@ -172,33 +172,34 @@ export default function CheckoutModal({ plan, onClose, backendApiUrl }: Checkout
 
   return (
     <AnimatePresence>
-      {/* Backdrop */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60]"
-        onClick={onClose}
-      />
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+        {/* Backdrop */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+          onClick={onClose}
+        />
 
-      {/* Modal */}
-      <motion.div
-        initial={{ opacity: 0, y: 40, scale: 0.95 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 40, scale: 0.95 }}
-        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-        className="fixed inset-x-4 top-[5vh] bottom-[5vh] sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:w-full sm:max-w-lg z-[61] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col"
-      >
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-zinc-100">
-          <div>
-            <h3 className="text-lg font-bold text-zinc-900">Complete Your Order</h3>
-            <p className="text-xs text-zinc-500 mt-0.5">{plan.name}</p>
+        {/* Modal Window */}
+        <motion.div
+          initial={{ opacity: 0, y: 25, scale: 0.96 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 25, scale: 0.96 }}
+          transition={{ type: 'spring', damping: 26, stiffness: 320 }}
+          className="relative w-full max-w-lg max-h-[90vh] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col my-auto z-10"
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between px-6 py-5 border-b border-zinc-100 shrink-0">
+            <div>
+              <h3 className="text-lg font-bold text-zinc-900">Complete Your Order</h3>
+              <p className="text-xs text-zinc-500 mt-0.5">{plan.name}</p>
+            </div>
+            <button onClick={onClose} className="p-2 rounded-full hover:bg-zinc-100 transition-colors text-zinc-400">
+              <X className="w-5 h-5" />
+            </button>
           </div>
-          <button onClick={onClose} className="p-2 rounded-full hover:bg-zinc-100 transition-colors text-zinc-400">
-            <X className="w-5 h-5" />
-          </button>
-        </div>
 
         {/* Scrollable content */}
         <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
@@ -254,7 +255,7 @@ export default function CheckoutModal({ plan, onClose, backendApiUrl }: Checkout
                     onChange={e => updateField('name', e.target.value)} />
                   {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name}</p>}
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <div className="relative">
                       <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
@@ -291,7 +292,7 @@ export default function CheckoutModal({ plan, onClose, backendApiUrl }: Checkout
                       value={form.area} onChange={e => updateField('area', e.target.value)} />
                     {errors.area && <p className="text-xs text-red-500 mt-1">{errors.area}</p>}
                   </div>
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
                       <input className={inputClass('city')} placeholder="City"
                         value={form.city} onChange={e => updateField('city', e.target.value)} />
@@ -316,7 +317,7 @@ export default function CheckoutModal({ plan, onClose, backendApiUrl }: Checkout
               {plan.printer && (
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800">
                   <strong>⚠️ Hardware Warranty Notice:</strong> Printer warranty is provided exclusively by the manufacturer. CafeQR provides software support only.
-                  <a href="#terms" className="underline ml-1 font-semibold">Read Terms</a>
+                  <a href="#terms" target="_blank" rel="noopener noreferrer" className="underline ml-1 font-semibold">Read Terms</a>
                 </div>
               )}
 
@@ -329,7 +330,7 @@ export default function CheckoutModal({ plan, onClose, backendApiUrl }: Checkout
                   className="mt-0.5 w-4 h-4 rounded border-zinc-300 text-primary focus:ring-primary accent-[#f97316]"
                 />
                 <span className="text-xs text-zinc-600 leading-relaxed">
-                  I agree to the <a href="#terms" className="text-primary font-semibold underline">Terms & Conditions</a> including the hardware warranty disclaimer and refund policy.
+                  I agree to the <a href="#terms" target="_blank" rel="noopener noreferrer" className="text-primary font-semibold underline">Terms & Conditions</a> including the hardware warranty disclaimer and refund policy.
                 </span>
               </label>
 
@@ -373,6 +374,9 @@ export default function CheckoutModal({ plan, onClose, backendApiUrl }: Checkout
           </div>
         )}
       </motion.div>
-    </AnimatePresence>
-  );
+    </div>
+  </AnimatePresence>
+);
 }
+
+

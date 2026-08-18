@@ -14,11 +14,11 @@ import {
   Truck,
   Check,
   Star,
-  Shield,
-  FileText
+  Shield
 } from 'lucide-react';
 import CheckoutModal from './components/CheckoutModal';
 import FAQ from './components/FAQ';
+import Terms from './pages/Terms';
 
 // ── Pricing Plans ─────────────────────────────────────────────────────────────
 
@@ -124,63 +124,8 @@ const getBackendApiUrl = (): string => {
   return 'https://api.cafeqr.in';
 };
 
-// ── Terms & Conditions ─────────────────────────────────────────────────────────
-
-function TermsSection() {
-  return (
-    <section id="terms" className="py-32 px-4 sm:px-6 lg:px-8 border-t border-white/20">
-      <div className="max-w-3xl mx-auto">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="p-2.5 bg-zinc-100 rounded-xl">
-            <FileText className="w-5 h-5 text-zinc-600" />
-          </div>
-          <h2 className="text-3xl font-extrabold text-zinc-900">Terms & Conditions</h2>
-        </div>
-
-        <div className="prose prose-sm prose-zinc max-w-none space-y-6 text-zinc-700 leading-relaxed">
-          <div>
-            <h3 className="text-lg font-bold text-zinc-900 mb-2">1. Software License</h3>
-            <p>CafeQR POS software is licensed on a yearly subscription basis. Each purchase grants a 1-year license with access to all modules and features. Renewal is available at ₹999/year. The software license is non-transferable and tied to the registered account.</p>
-          </div>
-
-          <div>
-            <h3 className="text-lg font-bold text-zinc-900 mb-2">2. Hardware Sales & Warranty</h3>
-            <p><strong>CafeQR LLP acts as a reseller and is NOT the manufacturer of any hardware products sold through this website.</strong> All hardware products (including thermal printers) are sourced from third-party manufacturers and suppliers.</p>
-            <p className="mt-2">Hardware warranty, including repair, replacement, and service, is provided exclusively by the original manufacturer or their authorized service center. <strong>CafeQR LLP disclaims all warranties, express or implied, regarding hardware products.</strong> For warranty claims, customers must contact the manufacturer directly.</p>
-          </div>
-
-          <div>
-            <h3 className="text-lg font-bold text-zinc-900 mb-2">3. Returns & Refunds</h3>
-            <p>Hardware products may be returned within <strong>7 days of delivery</strong> if the product is unopened and in its original packaging. Return shipping costs are borne by the customer. Software license fees are <strong>non-refundable once the subscription has been activated</strong>.</p>
-          </div>
-
-          <div>
-            <h3 className="text-lg font-bold text-zinc-900 mb-2">4. Shipping & Delivery</h3>
-            <p>Hardware orders are shipped via courier within 1-2 business days of payment confirmation. Estimated delivery time is 3-5 business days across India. Free shipping is included on all orders. Risk of loss and title for hardware products pass to the buyer upon delivery to the shipping carrier.</p>
-          </div>
-
-          <div>
-            <h3 className="text-lg font-bold text-zinc-900 mb-2">5. Limitation of Liability</h3>
-            <p>CafeQR LLP's total liability for any hardware purchase shall not exceed the purchase price of the hardware product. CafeQR LLP shall not be liable for any indirect, incidental, special, or consequential damages arising from hardware use, malfunction, or defects. CafeQR LLP's liability for software-related issues is limited to providing reasonable technical support during the active subscription period.</p>
-          </div>
-
-          <div>
-            <h3 className="text-lg font-bold text-zinc-900 mb-2">6. Privacy & Data</h3>
-            <p>Customer information collected during checkout (name, phone, email, shipping address) is used solely for order fulfillment, support, and communication. We do not sell or share personal information with third parties except as necessary for shipping and payment processing.</p>
-          </div>
-
-          <p className="text-xs text-zinc-500 pt-4 border-t border-zinc-200">
-            Last updated: {new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}. For questions, contact <a href="mailto:pnriyas50@gmail.com" className="text-primary font-semibold">pnriyas50@gmail.com</a>.
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ── Main App ───────────────────────────────────────────────────────────────────
-
 function App() {
+  const [currentView, setCurrentView] = useState<'home' | 'terms'>('home');
   const [activeApp, setActiveApp] = useState<'pos' | 'delivery'>('pos');
   const [posLoginUrl, setPosLoginUrl] = useState<string>('https://pos.cafeqr.in/login');
   const [backendApiUrl, setBackendApiUrl] = useState<string>('https://api.cafeqr.in');
@@ -189,10 +134,29 @@ function App() {
   useEffect(() => {
     setPosLoginUrl(getPosLoginUrl());
     setBackendApiUrl(getBackendApiUrl());
+
+    const checkRoute = () => {
+      const hash = window.location.hash.toLowerCase();
+      const path = window.location.pathname.toLowerCase();
+      if (hash === '#terms' || path === '/terms') {
+        setCurrentView('terms');
+      } else {
+        setCurrentView('home');
+      }
+    };
+
+    checkRoute();
+    window.addEventListener('hashchange', checkRoute);
+    window.addEventListener('popstate', checkRoute);
+    return () => {
+      window.removeEventListener('hashchange', checkRoute);
+      window.removeEventListener('popstate', checkRoute);
+    };
   }, []);
 
   // Initialize Lenis Smooth Scroll
   useEffect(() => {
+    if (currentView !== 'home') return;
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -210,7 +174,20 @@ function App() {
 
     requestAnimationFrame(raf);
     return () => { lenis.destroy(); };
-  }, []);
+  }, [currentView]);
+
+  if (currentView === 'terms') {
+    return (
+      <Terms
+        onBack={() => {
+          window.location.hash = '';
+          setCurrentView('home');
+          window.scrollTo(0, 0);
+        }}
+        posLoginUrl={posLoginUrl}
+      />
+    );
+  }
 
   return (
     <div className="relative min-h-screen bg-zinc-50 text-zinc-900 overflow-hidden font-sans">
@@ -247,7 +224,7 @@ function App() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-            className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-extrabold tracking-tight leading-[1.1] text-zinc-900 drop-shadow-sm"
+            className="text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-extrabold tracking-tight leading-[1.1] text-zinc-900 drop-shadow-sm px-2"
           >
             Start Billing<br />
             <span className="text-primary bg-none">In 5 Minutes.</span>
@@ -330,7 +307,7 @@ function App() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch">
             {pricingPlans.map((plan, i) => (
               <motion.div
                 key={plan.id}
@@ -652,9 +629,6 @@ function App() {
       {/* ── FAQ ────────────────────────────────────────────────────── */}
       <FAQ />
 
-      {/* ── Terms & Conditions ─────────────────────────────────────── */}
-      <TermsSection />
-
       {/* ── Footer ─────────────────────────────────────────────────── */}
       <footer className="border-t border-white/30 py-12 px-4 text-center text-zinc-500 text-sm bg-white/40 backdrop-blur-xl relative z-10">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-6">
@@ -663,7 +637,18 @@ function App() {
             <span className="font-bold text-zinc-900">Cafe QR POS ERP Ecosystem</span>
           </div>
           <div className="flex items-center gap-4">
-            <a href="#terms" className="text-zinc-500 hover:text-zinc-700 font-medium transition-colors">Terms & Conditions</a>
+            <a
+              href="#terms"
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.hash = 'terms';
+                setCurrentView('terms');
+                window.scrollTo(0, 0);
+              }}
+              className="text-zinc-500 hover:text-zinc-700 font-medium transition-colors cursor-pointer"
+            >
+              Terms & Conditions
+            </a>
             <span className="text-zinc-300">•</span>
             <p>© {new Date().getFullYear()} Cafe QR. All rights reserved.</p>
           </div>
