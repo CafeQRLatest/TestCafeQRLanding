@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, MapPin, User, Phone, Mail, Home, Check, AlertCircle, Loader2 } from 'lucide-react';
+import { X, MapPin, User, Phone, Mail, Check, AlertCircle, Loader2 } from 'lucide-react';
 
 interface PricingPlan {
   id: string;

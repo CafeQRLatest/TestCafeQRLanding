@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronRight,
   Users2,
-  Globe2,
   Wifi,
   MapPin,
   ShoppingBag,
