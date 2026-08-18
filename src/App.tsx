@@ -45,10 +45,31 @@ const industryPresets = {
   wholesale: ['payment', 'ledger', 'inventory', 'purchase', 'crm', 'discounts']
 };
 
+const getPosLoginUrl = (): string => {
+  if (typeof window !== 'undefined') {
+    const envUrl = (import.meta as any).env?.VITE_POS_LOGIN_URL;
+    if (envUrl) return envUrl;
+
+    const hostname = window.location.hostname.toLowerCase();
+    // Test environments (test-cafe-qr-landing.vercel.app, localhost, etc.)
+    if (hostname.includes('test') || hostname === 'localhost' || hostname === '127.0.0.1') {
+      return 'https://cafe-test-qr-frontend.vercel.app/login';
+    }
+    // Production environment
+    return 'https://pos.cafeqr.in/login';
+  }
+  return 'https://pos.cafeqr.in/login';
+};
+
 function App() {
   const [activeIndustry, setActiveIndustry] = useState<'cafe' | 'grocery' | 'boutique' | 'wholesale'>('cafe');
   const [selectedModules, setSelectedModules] = useState<string[]>(industryPresets['cafe']);
   const [activeApp, setActiveApp] = useState<'pos' | 'delivery'>('pos');
+  const [posLoginUrl, setPosLoginUrl] = useState<string>('https://cafe-test-qr-frontend.vercel.app/login');
+
+  useEffect(() => {
+    setPosLoginUrl(getPosLoginUrl());
+  }, []);
 
   // Handle preset selection
   const selectPreset = (preset: 'cafe' | 'grocery' | 'boutique' | 'wholesale') => {
@@ -114,7 +135,7 @@ function App() {
         
         <div className="flex items-center gap-6">
           <a 
-            href="https://pos.cafeqr.in/login/" 
+            href={posLoginUrl} 
             className="px-6 py-2.5 bg-zinc-900/90 backdrop-blur-md text-white rounded-full font-semibold hover:bg-zinc-800 transition-colors shadow-lg text-sm"
           >
             POS Login
@@ -287,7 +308,7 @@ function App() {
               </div>
 
               <a 
-                href="https://pos.cafeqr.in/login/" 
+                href={posLoginUrl} 
                 className="relative z-10 mt-10 w-full py-4 bg-primary text-white font-bold rounded-xl text-center hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/20 block"
               >
                 Access Dashboard
