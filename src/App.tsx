@@ -167,6 +167,12 @@ function App() {
       infinite: false,
     });
 
+    if (checkoutPlan) {
+      lenis.stop();
+    } else {
+      lenis.start();
+    }
+
     function raf(time: number) {
       lenis.raf(time);
       requestAnimationFrame(raf);
@@ -174,7 +180,7 @@ function App() {
 
     requestAnimationFrame(raf);
     return () => { lenis.destroy(); };
-  }, [currentView]);
+  }, [currentView, checkoutPlan]);
 
   if (currentView === 'terms') {
     return (

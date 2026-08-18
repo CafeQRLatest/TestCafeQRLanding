@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, MapPin, User, Phone, Mail, Check, AlertCircle, Loader2 } from 'lucide-react';
 
@@ -45,6 +45,17 @@ export default function CheckoutModal({ plan, onClose, backendApiUrl }: Checkout
   const [paymentError, setPaymentError] = useState('');
   const [success, setSuccess] = useState(false);
   const [orderId, setOrderId] = useState('');
+
+  // Lock background body scroll and isolate mouse wheel when modal is open
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      const prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = prevOverflow;
+      };
+    }
+  }, []);
 
   if (!plan) return null;
 
@@ -172,7 +183,7 @@ export default function CheckoutModal({ plan, onClose, backendApiUrl }: Checkout
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+      <div data-lenis-prevent className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -188,6 +199,8 @@ export default function CheckoutModal({ plan, onClose, backendApiUrl }: Checkout
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 25, scale: 0.96 }}
           transition={{ type: 'spring', damping: 26, stiffness: 320 }}
+          data-lenis-prevent
+          onWheel={(e) => e.stopPropagation()}
           className="relative w-full max-w-lg max-h-[90vh] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col my-auto z-10"
         >
           {/* Header */}
@@ -202,22 +215,35 @@ export default function CheckoutModal({ plan, onClose, backendApiUrl }: Checkout
           </div>
 
         {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
+        <div
+          data-lenis-prevent
+          onWheel={(e) => e.stopPropagation()}
+          className="flex-1 overflow-y-auto px-6 py-5 space-y-5 overscroll-contain"
+        >
           {success ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center space-y-4">
+            <div className="flex flex-col items-center justify-center py-6 text-center space-y-4">
               <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center">
                 <Check className="w-8 h-8 text-emerald-600" />
               </div>
               <h4 className="text-xl font-bold text-zinc-900">Payment Successful!</h4>
               <p className="text-sm text-zinc-600 max-w-xs">
-                Thank you for your purchase. Your order <strong className="text-zinc-900">{orderId}</strong> has been confirmed.
+                Your order <strong className="text-zinc-900">{orderId}</strong> is confirmed and your <strong>1-Year CafeQR POS account is active</strong>.
               </p>
-              <p className="text-xs text-zinc-500">
-                We'll reach out to you at <strong>{form.phone}</strong> to coordinate delivery and setup.
-              </p>
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800 mt-4 max-w-xs">
-                📦 Estimated delivery: <strong>3-5 business days</strong>
+              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 text-xs text-emerald-900 text-left w-full space-y-1.5">
+                <p><strong>📧 Account Credentials:</strong> We've emailed your POS login credentials to <strong>{form.email}</strong>.</p>
+                <p className="text-[11px] text-emerald-700">Our onboarding specialist will reach out to <strong>{form.phone}</strong> for setup guidance.</p>
               </div>
+              {plan.printer && (
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800 w-full text-center">
+                  📦 Estimated printer dispatch: <strong>3-5 business days</strong> (Free Shipping)
+                </div>
+              )}
+              <a
+                href={typeof window !== 'undefined' && (window.location.hostname.includes('test') || window.location.hostname.includes('localhost')) ? 'https://cafe-test-qr-frontend.vercel.app/login' : 'https://pos.cafeqr.in/login'}
+                className="w-full py-3.5 bg-primary hover:bg-orange-600 text-white font-bold rounded-xl text-sm transition-colors block text-center shadow-lg shadow-orange-500/20"
+              >
+                Go to POS Login →
+              </a>
             </div>
           ) : (
             <>
