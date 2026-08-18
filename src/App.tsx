@@ -1,90 +1,198 @@
 import { useEffect, useState } from 'react';
 import Lenis from '@studio-freight/lenis';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  ChevronRight, 
+import {
+  ChevronRight,
   Users2,
   Globe2,
-  Boxes,
-  ToggleLeft,
-  ToggleRight,
   Wifi,
   MapPin,
-  ShoppingBag
+  ShoppingBag,
+  Smartphone,
+  Printer,
+  BarChart3,
+  UtensilsCrossed,
+  Truck,
+  Check,
+  Star,
+  Shield,
+  FileText
 } from 'lucide-react';
+import CheckoutModal from './components/CheckoutModal';
+import FAQ from './components/FAQ';
 
+// ── Pricing Plans ─────────────────────────────────────────────────────────────
 
-
-// Configuration Modules
-interface ERPModule {
+interface PricingPlan {
   id: string;
-  label: string;
-  description: string;
+  name: string;
+  price: number;
+  originalPrice?: number;
+  printer?: string;
+  printerSize?: string;
+  badge?: string;
+  bestFor: string;
+  features: string[];
+  highlight?: boolean;
 }
 
-const erpModules: ERPModule[] = [
-  { id: 'payment', label: 'Online Payment', description: 'Enable UPI, Card & Wallet payments at checkout.' },
-  { id: 'images', label: 'Menu/Product Images', description: 'Show item images in digital menus and catalogs.' },
-  { id: 'ledger', label: 'Credit Ledger (Udhaar)', description: 'Maintain credit accounts for regular customers.' },
-  { id: 'tables', label: 'Table Management', description: 'Assign orders, reserve tables, and view layout states.' },
-  { id: 'qr', label: 'QR Ordering', description: 'Self-serve tableside QR scanning & billing.' },
-  { id: 'inventory', label: 'Inventory ERP', description: 'Track raw materials, stock levels, and food costings.' },
-  { id: 'purchase', label: 'Purchase Orders', description: 'Manage supplier lists, POs, and incoming stock entries.' },
-  { id: 'crm', label: 'Customers & CRM', description: 'Track purchase history and customer contact logs.' },
-  { id: 'loyalty', label: 'Loyalty Points', description: 'Run customer point campaigns and reward systems.' },
-  { id: 'discounts', label: 'Enable Discounts', description: 'Manage flat, percentage, or item-wise discount schemes.' },
-  { id: 'kot', label: 'Send to Kitchen (KOT)', description: 'Instantly push orders to Kitchen Display Screen.' },
-  { id: 'delivery', label: 'Online Delivery', description: 'Dispatch orders directly to delivery app.' }
+const pricingPlans: PricingPlan[] = [
+  {
+    id: 'STARTER',
+    name: 'Starter Kit',
+    price: 4999,
+    originalPrice: 5998,
+    printer: 'Hoin 58mm Bluetooth Printer',
+    printerSize: '2-inch',
+    bestFor: 'Tea shops, juice stalls, food carts',
+    features: [
+      'Portable 58mm Bluetooth Printer',
+      'CafeQR POS — 1 Year Core License',
+      'Billing, QR Ordering & Reports',
+      'Free menu setup & onboarding',
+      'Optional ERP add-ons available',
+    ],
+  },
+  {
+    id: 'PRO',
+    name: 'Pro Kit',
+    price: 7999,
+    originalPrice: 8898,
+    printer: 'SHREYANS 80mm Bluetooth Printer',
+    printerSize: '3-inch',
+    badge: 'MOST POPULAR',
+    bestFor: 'Restaurants, cafes, bakeries, grocery stores',
+    highlight: true,
+    features: [
+      'Professional 80mm Bluetooth Printer',
+      'CafeQR POS — 1 Year Core License',
+      'Billing, QR Ordering & Reports',
+      'Free menu setup & onboarding',
+      'Priority support & ERP add-on options',
+    ],
+  },
+  {
+    id: 'SOFTWARE_ONLY',
+    name: 'Software Only',
+    price: 2499,
+    bestFor: 'Already have a Bluetooth printer?',
+    features: [
+      'CafeQR POS — 1 Year Core License',
+      'Billing, QR Ordering & Reports',
+      'Free menu setup & onboarding',
+      'Standard renewal at ₹999/year',
+      'Optional ERP add-ons available',
+    ],
+  },
 ];
 
-// Presets by Industry
-const industryPresets = {
-  boutique: ['payment', 'images', 'inventory', 'crm', 'loyalty', 'discounts'],
-  grocery: ['payment', 'ledger', 'inventory', 'purchase', 'crm', 'loyalty', 'discounts'],
-  cafe: ['payment', 'images', 'tables', 'qr', 'inventory', 'loyalty', 'discounts', 'kot', 'delivery'],
-  wholesale: ['payment', 'ledger', 'inventory', 'purchase', 'crm', 'discounts']
-};
+// ── Features Grid ─────────────────────────────────────────────────────────────
+
+const features = [
+  { icon: Smartphone, title: 'Works on Any Device', desc: 'Android tablets, phones, or desktop browsers — your POS runs everywhere.', color: 'bg-blue-50 text-blue-600 border-blue-100/50' },
+  { icon: Printer, title: 'Bluetooth Printing', desc: 'Print receipts instantly via any Bluetooth thermal printer.', color: 'bg-emerald-50 text-emerald-600 border-emerald-100/50' },
+  { icon: BarChart3, title: 'Sales & Reports', desc: 'Daily, weekly, monthly sales analytics with export to Excel.', color: 'bg-violet-50 text-violet-600 border-violet-100/50' },
+  { icon: UtensilsCrossed, title: 'Kitchen Display (KOT)', desc: 'Orders go straight to the kitchen screen — no more paper tickets.', color: 'bg-rose-50 text-rose-600 border-rose-100/50' },
+  { icon: Truck, title: 'Online Delivery', desc: 'Accept delivery orders with your own branded customer website.', color: 'bg-amber-50 text-amber-600 border-amber-100/50' },
+  { icon: Users2, title: 'Multi-Branch & Staff', desc: 'Manage multiple outlets, roles, and permissions from one dashboard.', color: 'bg-indigo-50 text-indigo-600 border-indigo-100/50' },
+];
+
+// ── POS Login URL (Environment-Aware) ──────────────────────────────────────────
 
 const getPosLoginUrl = (): string => {
   if (typeof window !== 'undefined') {
     const envUrl = (import.meta as any).env?.VITE_POS_LOGIN_URL;
     if (envUrl) return envUrl;
-
     const hostname = window.location.hostname.toLowerCase();
-    // Test environments (test-cafe-qr-landing.vercel.app, localhost, etc.)
     if (hostname.includes('test') || hostname === 'localhost' || hostname === '127.0.0.1') {
       return 'https://cafe-test-qr-frontend.vercel.app/login';
     }
-    // Production environment
     return 'https://pos.cafeqr.in/login';
   }
   return 'https://pos.cafeqr.in/login';
 };
 
+const getBackendApiUrl = (): string => {
+  if (typeof window !== 'undefined') {
+    const envUrl = (import.meta as any).env?.VITE_BACKEND_API_URL;
+    if (envUrl) return envUrl;
+    const hostname = window.location.hostname.toLowerCase();
+    if (hostname.includes('test') || hostname === 'localhost' || hostname === '127.0.0.1') {
+      return 'https://test-api.cafeqr.in';
+    }
+    return 'https://api.cafeqr.in';
+  }
+  return 'https://api.cafeqr.in';
+};
+
+// ── Terms & Conditions ─────────────────────────────────────────────────────────
+
+function TermsSection() {
+  return (
+    <section id="terms" className="py-32 px-4 sm:px-6 lg:px-8 border-t border-white/20">
+      <div className="max-w-3xl mx-auto">
+        <div className="flex items-center gap-3 mb-8">
+          <div className="p-2.5 bg-zinc-100 rounded-xl">
+            <FileText className="w-5 h-5 text-zinc-600" />
+          </div>
+          <h2 className="text-3xl font-extrabold text-zinc-900">Terms & Conditions</h2>
+        </div>
+
+        <div className="prose prose-sm prose-zinc max-w-none space-y-6 text-zinc-700 leading-relaxed">
+          <div>
+            <h3 className="text-lg font-bold text-zinc-900 mb-2">1. Software License</h3>
+            <p>CafeQR POS software is licensed on a yearly subscription basis. Each purchase grants a 1-year license with access to all modules and features. Renewal is available at ₹999/year. The software license is non-transferable and tied to the registered account.</p>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-bold text-zinc-900 mb-2">2. Hardware Sales & Warranty</h3>
+            <p><strong>CafeQR LLP acts as a reseller and is NOT the manufacturer of any hardware products sold through this website.</strong> All hardware products (including thermal printers) are sourced from third-party manufacturers and suppliers.</p>
+            <p className="mt-2">Hardware warranty, including repair, replacement, and service, is provided exclusively by the original manufacturer or their authorized service center. <strong>CafeQR LLP disclaims all warranties, express or implied, regarding hardware products.</strong> For warranty claims, customers must contact the manufacturer directly.</p>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-bold text-zinc-900 mb-2">3. Returns & Refunds</h3>
+            <p>Hardware products may be returned within <strong>7 days of delivery</strong> if the product is unopened and in its original packaging. Return shipping costs are borne by the customer. Software license fees are <strong>non-refundable once the subscription has been activated</strong>.</p>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-bold text-zinc-900 mb-2">4. Shipping & Delivery</h3>
+            <p>Hardware orders are shipped via courier within 1-2 business days of payment confirmation. Estimated delivery time is 3-5 business days across India. Free shipping is included on all orders. Risk of loss and title for hardware products pass to the buyer upon delivery to the shipping carrier.</p>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-bold text-zinc-900 mb-2">5. Limitation of Liability</h3>
+            <p>CafeQR LLP's total liability for any hardware purchase shall not exceed the purchase price of the hardware product. CafeQR LLP shall not be liable for any indirect, incidental, special, or consequential damages arising from hardware use, malfunction, or defects. CafeQR LLP's liability for software-related issues is limited to providing reasonable technical support during the active subscription period.</p>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-bold text-zinc-900 mb-2">6. Privacy & Data</h3>
+            <p>Customer information collected during checkout (name, phone, email, shipping address) is used solely for order fulfillment, support, and communication. We do not sell or share personal information with third parties except as necessary for shipping and payment processing.</p>
+          </div>
+
+          <p className="text-xs text-zinc-500 pt-4 border-t border-zinc-200">
+            Last updated: {new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}. For questions, contact <a href="mailto:pnriyas50@gmail.com" className="text-primary font-semibold">pnriyas50@gmail.com</a>.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ── Main App ───────────────────────────────────────────────────────────────────
+
 function App() {
-  const [activeIndustry, setActiveIndustry] = useState<'cafe' | 'grocery' | 'boutique' | 'wholesale'>('cafe');
-  const [selectedModules, setSelectedModules] = useState<string[]>(industryPresets['cafe']);
   const [activeApp, setActiveApp] = useState<'pos' | 'delivery'>('pos');
-  const [posLoginUrl, setPosLoginUrl] = useState<string>('https://cafe-test-qr-frontend.vercel.app/login');
+  const [posLoginUrl, setPosLoginUrl] = useState<string>('https://pos.cafeqr.in/login');
+  const [backendApiUrl, setBackendApiUrl] = useState<string>('https://api.cafeqr.in');
+  const [checkoutPlan, setCheckoutPlan] = useState<PricingPlan | null>(null);
 
   useEffect(() => {
     setPosLoginUrl(getPosLoginUrl());
+    setBackendApiUrl(getBackendApiUrl());
   }, []);
 
-  // Handle preset selection
-  const selectPreset = (preset: 'cafe' | 'grocery' | 'boutique' | 'wholesale') => {
-    setActiveIndustry(preset);
-    setSelectedModules(industryPresets[preset]);
-  };
-
-  // Toggle individual module in simulator
-  const toggleModule = (id: string) => {
-    setSelectedModules(prev => 
-      prev.includes(id) ? prev.filter(m => m !== id) : [...prev, id]
-    );
-  };
-
-  // Initialize Lenis Smooth Scroll (Crucial for WebGL Scroll Sync)
+  // Initialize Lenis Smooth Scroll
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
@@ -102,40 +210,21 @@ function App() {
     }
 
     requestAnimationFrame(raf);
-
-    return () => {
-      lenis.destroy();
-    };
+    return () => { lenis.destroy(); };
   }, []);
-
-  // Calculate dynamic real-time price based on module choices
-  const calculatePricing = () => {
-    let addOns = 0;
-    if (selectedModules.includes('kot')) addOns += 499;
-    if (selectedModules.includes('ledger')) addOns += 499;
-    if (selectedModules.includes('crm') || selectedModules.includes('loyalty')) addOns += 999;
-    if (selectedModules.includes('inventory') || selectedModules.includes('purchase')) addOns += 1999;
-
-    return {
-      year1: 2499 + addOns,
-      year2: 999 + addOns
-    };
-  };
 
   return (
     <div className="relative min-h-screen bg-zinc-50 text-zinc-900 overflow-hidden font-sans">
 
-
-      {/* Navigation (Heavily Frosted Glass) */}
+      {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center p-5 lg:px-8 bg-white/50 backdrop-blur-2xl border-b border-white/40 shadow-[0_4px_30px_rgba(0,0,0,0.02)]">
         <div className="flex items-center gap-3">
           <img src="/logo.png" alt="Cafe QR Logo" className="w-10 h-10 object-contain rounded-md" />
           <span className="text-xl font-bold tracking-tight text-zinc-900">Cafe QR ERP</span>
         </div>
-        
         <div className="flex items-center gap-6">
-          <a 
-            href={posLoginUrl} 
+          <a
+            href={posLoginUrl}
             className="px-6 py-2.5 bg-zinc-900/90 backdrop-blur-md text-white rounded-full font-semibold hover:bg-zinc-800 transition-colors shadow-lg text-sm"
           >
             POS Login
@@ -143,239 +232,259 @@ function App() {
         </div>
       </nav>
 
-      {/* Hero Section (Transparent overlay) */}
-      <section className="relative min-h-[110vh] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 pt-20">
+      {/* ── Hero Section ───────────────────────────────────────────── */}
+      <section className="relative min-h-[100vh] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 pt-20">
         <div className="relative z-10 text-center max-w-4xl mx-auto pointer-events-none select-none flex flex-col items-center">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="mb-6 px-4 py-1.5 bg-white/70 backdrop-blur-md border border-white/50 shadow-sm rounded-full text-xs font-bold uppercase tracking-wider text-primary"
           >
-            ✦ Universal POS & ERP Platform
+            ✦ Complete POS Kit — Software + Printer
           </motion.div>
 
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
             className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-extrabold tracking-tight leading-[1.1] text-zinc-900 drop-shadow-sm"
           >
-            One Platform. <br/>
-            Any <span className="text-primary bg-none">Business ERP.</span>
+            Start Billing<br />
+            <span className="text-primary bg-none">In 5 Minutes.</span>
           </motion.h1>
-          
-          <motion.p 
+
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
             className="mt-6 text-lg sm:text-xl md:text-2xl text-zinc-600 max-w-2xl mx-auto leading-relaxed drop-shadow-sm"
           >
-            Adapt billing, inventory, CRM, and multi-timezone branch configurations dynamically. The industry-standard POS ERP crafted for modern retail, F&B, and wholesale operations.
+            Get a ready-to-use POS system with a Bluetooth printer. All features included — billing, inventory, KOT, delivery, CRM, and more.
           </motion.p>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
             className="mt-10 flex flex-col sm:flex-row gap-4 pointer-events-auto"
           >
-            <a 
-              href="#simulator" 
+            <a
+              href="#pricing"
               className="px-8 py-4 bg-primary text-white rounded-full font-bold flex items-center justify-center gap-2 hover:bg-orange-600 transition-all shadow-xl shadow-orange-500/20 hover:shadow-orange-500/30 cursor-pointer"
             >
-              Configure Your POS
+              See Pricing <ChevronRight className="w-4 h-4" />
+            </a>
+            <a
+              href={posLoginUrl}
+              className="px-8 py-4 bg-white border border-zinc-200 text-zinc-700 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-zinc-50 transition-all shadow-sm cursor-pointer"
+            >
+              Already a user? Login
             </a>
           </motion.div>
         </div>
       </section>
 
-      {/* Simulator Section (Glassmorphism Configurator) */}
-      <section id="simulator" className="relative py-40 px-4 sm:px-6 lg:px-8 border-t border-white/20">
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-zinc-900 drop-shadow-sm">Toggle Only What You Need</h2>
-            <p className="mt-4 text-zinc-600 text-lg font-medium drop-shadow-sm">Select your industry preset to watch the configuration adapt. Add or remove modules at any time.</p>
-          </div>
-
-          {/* Industry Preset Selector */}
-          <div className="flex flex-wrap justify-center gap-3 mb-12">
-            {(['cafe', 'grocery', 'boutique', 'wholesale'] as const).map((industry) => (
-              <button
-                key={industry}
-                onClick={() => selectPreset(industry)}
-                className={`px-6 py-3 rounded-full text-sm font-bold uppercase tracking-wider transition-all cursor-pointer backdrop-blur-md shadow-sm ${
-                  activeIndustry === industry 
-                    ? 'bg-zinc-900/90 text-white border border-zinc-700/50 scale-105 shadow-lg' 
-                    : 'bg-white/60 border border-white/60 text-zinc-600 hover:bg-white/90 hover:text-zinc-900'
-                }`}
-              >
-                {industry === 'cafe' && '☕ Cafe & Bakery'}
-                {industry === 'grocery' && '🍎 Grocery Store'}
-                {industry === 'boutique' && '🧥 Fashion Boutique'}
-                {industry === 'wholesale' && '📦 Wholesale & B2B'}
-              </button>
-            ))}
-          </div>
-
-          {/* Interactive Toggle Dashboard (Glassmorphism) */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {erpModules.map((module) => {
-                const isActive = selectedModules.includes(module.id);
-                return (
-                  <div 
-                    key={module.id}
-                    onClick={() => toggleModule(module.id)}
-                    className={`flex items-start gap-4 p-5 rounded-3xl border backdrop-blur-xl transition-all cursor-pointer select-none ${
-                      isActive 
-                        ? 'bg-white/80 border-white/60 shadow-[0_8px_30px_rgba(0,0,0,0.06)] scale-[1.02]' 
-                        : 'bg-white/30 border-white/20 hover:border-white/40 hover:bg-white/50'
-                    }`}
-                  >
-                    <div className="mt-1 transition-colors">
-                      {isActive ? (
-                        <ToggleRight className="w-6 h-6 text-primary" />
-                      ) : (
-                        <ToggleLeft className="w-6 h-6 text-zinc-400" />
-                      )}
-                    </div>
-                    <div>
-                      <h4 className={`font-bold text-sm ${isActive ? 'text-zinc-900' : 'text-zinc-500'}`}>
-                        {module.label}
-                      </h4>
-                      <p className="text-zinc-500 text-xs mt-1.5 leading-relaxed">{module.description}</p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Live System Spec Overview (Dark Glass) */}
-            <div className="p-8 rounded-[2.5rem] bg-zinc-900/80 backdrop-blur-2xl border border-zinc-700/50 text-white flex flex-col justify-between shadow-2xl relative overflow-hidden">
-              {/* Subtle glare effect */}
-              <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-              
-              <div className="relative z-10">
-                <span className="text-xs font-bold text-primary uppercase tracking-widest">Live Configuration</span>
-                <h3 className="text-3xl font-extrabold mt-2 mb-6 capitalize">{activeIndustry} ERP Spec</h3>
-                
-                <div className="space-y-4">
-                  <div className="flex justify-between text-sm items-center border-b border-zinc-700/50 pb-3">
-                    <span className="text-zinc-400">Active Modules:</span>
-                    <span className="text-white font-bold px-3 py-1 bg-zinc-800/80 rounded-full">{selectedModules.length} / {erpModules.length}</span>
-                  </div>
-                  <div className="flex justify-between text-sm items-center border-b border-zinc-700/50 pb-3">
-                    <span className="text-zinc-400">Scalability:</span>
-                    <span className="text-emerald-400 font-bold bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">Unlimited Terminals</span>
-                  </div>
-                  <div className="flex justify-between text-sm items-center pb-3">
-                    <span className="text-zinc-400">Deploy Type:</span>
-                    <span className="text-primary font-bold bg-primary/10 px-3 py-1 rounded-full border border-primary/20">Instant Cloud Sync</span>
-                  </div>
-                </div>
-
-                <div className="mt-8 border-t border-zinc-700/50 pt-6">
-                  <h4 className="text-xs font-bold uppercase text-zinc-500 tracking-wider mb-3">Included Apps:</h4>
-                  <div className="flex flex-wrap gap-2">
-                    <span className="px-3 py-1.5 bg-zinc-800/80 text-zinc-300 text-xs font-medium rounded-full border border-zinc-700/50">Owner Dashboard App</span>
-                    <span className="px-3 py-1.5 bg-zinc-800/80 text-zinc-300 text-xs font-medium rounded-full border border-zinc-700/50">Cashier Terminal App</span>
-                    {selectedModules.includes('delivery') && (
-                      <span className="px-3 py-1.5 bg-primary/20 text-primary text-xs font-medium rounded-full border border-primary/20 shadow-[0_0_15px_rgba(249,115,22,0.15)]">Delivery Driver App</span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="mt-8 border-t border-zinc-700/50 pt-6">
-                  <h4 className="text-xs font-bold uppercase text-zinc-500 tracking-wider mb-3">Real-Time Estimator:</h4>
-                  <div className="bg-zinc-800/40 p-4 rounded-2xl border border-zinc-700/30 space-y-3">
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="text-zinc-400">Year 1 Total:</span>
-                      <span className="text-white font-extrabold text-base">₹{calculatePricing().year1.toLocaleString('en-IN')}</span>
-                    </div>
-                    <div className="flex justify-between items-center text-sm border-t border-dashed border-zinc-700/50 pt-2.5">
-                      <span className="text-zinc-400">Year 2 & Beyond:</span>
-                      <span className="text-primary font-extrabold text-base">
-                        ₹{calculatePricing().year2.toLocaleString('en-IN')}
-                        <span className="text-[10px] text-zinc-400 font-normal"> / year</span>
-                      </span>
-                    </div>
-                    <p className="text-[9px] text-zinc-500 leading-normal font-semibold mt-1">
-                      *Includes ₹1,499 one-time setup & onboarding fee in Year 1. Renewal starts in Year 2.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <a 
-                href={posLoginUrl} 
-                className="relative z-10 mt-10 w-full py-4 bg-primary text-white font-bold rounded-xl text-center hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/20 block"
-              >
-                Access Dashboard
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Enterprise Multi-Branch Features (Frosted Tiles) */}
-      <section className="py-40 px-4 sm:px-6 lg:px-8 border-t border-white/20">
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-20">
-            <h2 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-zinc-900 drop-shadow-sm">Scale Without Boundaries</h2>
-            <p className="mt-4 text-zinc-600 text-lg font-medium drop-shadow-sm">Designed for complex organizational hierarchies, multi-timezone branches, and extensive warehouses.</p>
+      {/* ── How It Works ───────────────────────────────────────────── */}
+      <section className="py-32 px-4 sm:px-6 lg:px-8 border-t border-white/20">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-zinc-900">
+              Up & Running in 3 Steps
+            </h2>
+            <p className="mt-4 text-zinc-600 text-lg font-medium">No complex setup. No IT team needed.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="p-8 rounded-[2rem] bg-white/60 backdrop-blur-xl border border-white/60 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:bg-white/80 transition-all">
-              <div className="p-3.5 bg-indigo-50 text-indigo-600 w-fit rounded-2xl mb-6 shadow-sm border border-indigo-100/50">
-                <Globe2 className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-bold text-zinc-900 mb-2">Multi-Timezone Branches</h3>
-              <p className="text-zinc-600 text-sm leading-relaxed">Run separate branches across different cities or countries. The system handles localization, custom currencies, and local operational hours automatically.</p>
-            </div>
-
-            <div className="p-8 rounded-[2rem] bg-white/60 backdrop-blur-xl border border-white/60 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:bg-white/80 transition-all">
-              <div className="p-3.5 bg-rose-50 text-rose-600 w-fit rounded-2xl mb-6 shadow-sm border border-rose-100/50">
-                <Users2 className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-bold text-zinc-900 mb-2">Role-Based Access (RBAC)</h3>
-              <p className="text-zinc-600 text-sm leading-relaxed">Allocate unique privileges to Super Admins, Branch Managers, Cashiers, and Warehousing staff to avoid internal billing fraud.</p>
-            </div>
-
-            <div className="p-8 rounded-[2rem] bg-white/60 backdrop-blur-xl border border-white/60 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:bg-white/80 transition-all">
-              <div className="p-3.5 bg-amber-50 text-amber-600 w-fit rounded-2xl mb-6 shadow-sm border border-amber-100/50">
-                <Boxes className="w-6 h-6" />
-              </div>
-              <h3 className="text-xl font-bold text-zinc-900 mb-2">Warehouses & Terminals</h3>
-              <p className="text-zinc-600 text-sm leading-relaxed">Manage central warehouses, supply runs, and individual billing terminal allocations to distinct register counters.</p>
-            </div>
+            {[
+              { step: '01', title: 'Choose Your Kit', desc: 'Pick a Starter or Pro kit with a Bluetooth printer, or get software only if you already have one.', icon: '📦' },
+              { step: '02', title: 'We Set You Up', desc: 'Our team configures your menu, categories, and POS settings. You just share your details.', icon: '⚙️' },
+              { step: '03', title: 'Start Billing', desc: "Install the app, connect your printer, and start taking orders. It's that simple.", icon: '🧾' },
+            ].map((s, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.15 }}
+                className="relative p-8 rounded-[2rem] bg-white/60 backdrop-blur-xl border border-white/60 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:bg-white/80 transition-all text-center"
+              >
+                <span className="text-4xl mb-4 block">{s.icon}</span>
+                <span className="text-xs font-bold text-primary uppercase tracking-widest">Step {s.step}</span>
+                <h3 className="text-xl font-bold text-zinc-900 mt-2 mb-2">{s.title}</h3>
+                <p className="text-zinc-600 text-sm leading-relaxed">{s.desc}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
+      {/* ── Pricing Bundles ────────────────────────────────────────── */}
+      <section id="pricing" className="py-32 px-4 sm:px-6 lg:px-8 border-t border-white/20">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-zinc-900">
+              Simple, Transparent Pricing
+            </h2>
+            <p className="mt-4 text-zinc-600 text-lg font-medium">
+              Everything included. No hidden fees. No module upsells.
+            </p>
+          </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-start">
+            {pricingPlans.map((plan, i) => (
+              <motion.div
+                key={plan.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className={`relative p-8 rounded-[2rem] border backdrop-blur-xl flex flex-col transition-all ${
+                  plan.highlight
+                    ? 'bg-zinc-900/90 border-zinc-700/50 text-white shadow-2xl scale-[1.03] ring-2 ring-primary/30'
+                    : 'bg-white/70 border-white/60 shadow-[0_8px_30px_rgba(0,0,0,0.04)]'
+                }`}
+              >
+                {/* Badge */}
+                {plan.badge && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-primary text-white text-xs font-bold rounded-full shadow-lg shadow-orange-500/30 flex items-center gap-1.5">
+                    <Star className="w-3 h-3" /> {plan.badge}
+                  </div>
+                )}
 
-      {/* Play Store Apps Section */}
-      <section id="apps" className="py-40 px-4 sm:px-6 lg:px-8 border-t border-white/20">
+                {/* Printer Image */}
+                {plan.printer ? (
+                  <div className={`h-48 rounded-2xl flex items-center justify-center mb-6 overflow-hidden ${plan.highlight ? 'bg-zinc-800/50' : 'bg-zinc-50'}`}>
+                    <img
+                      src={plan.printerSize === '2-inch' ? '/printer-2inch.png' : '/printer-3inch.png'}
+                      alt={plan.printer}
+                      className="h-36 object-contain drop-shadow-lg"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLElement).style.display = 'none';
+                        const parent = (e.currentTarget as HTMLElement).parentElement;
+                        if (parent && !parent.querySelector('.printer-fallback')) {
+                          const div = document.createElement('div');
+                          div.className = 'printer-fallback flex flex-col items-center justify-center text-center p-4';
+                          div.innerHTML = `<span class="text-4xl">🖨️</span><span class="text-xs font-bold mt-2 ${plan.highlight ? 'text-zinc-300' : 'text-zinc-600'}">${plan.printer}</span>`;
+                          parent.appendChild(div);
+                        }
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div className={`h-48 rounded-2xl flex flex-col items-center justify-center mb-6 ${plan.highlight ? 'bg-zinc-800/50' : 'bg-zinc-50'}`}>
+                    <Smartphone className={`w-16 h-16 ${plan.highlight ? 'text-primary' : 'text-zinc-300'}`} />
+                    <span className={`text-xs mt-3 font-bold ${plan.highlight ? 'text-zinc-400' : 'text-zinc-400'}`}>Software License Only</span>
+                  </div>
+                )}
+
+                {/* Plan Name */}
+                <h3 className={`text-xl font-extrabold ${plan.highlight ? 'text-white' : 'text-zinc-900'}`}>
+                  {plan.name}
+                </h3>
+                <p className={`text-xs mt-1 mb-4 ${plan.highlight ? 'text-zinc-400' : 'text-zinc-500'}`}>
+                  {plan.bestFor}
+                </p>
+
+                {/* Price */}
+                <div className="flex items-baseline gap-2 mb-6">
+                  <span className={`text-4xl font-extrabold ${plan.highlight ? 'text-white' : 'text-zinc-900'}`}>
+                    ₹{plan.price.toLocaleString('en-IN')}
+                  </span>
+                  {plan.originalPrice && (
+                    <span className={`text-sm line-through ${plan.highlight ? 'text-zinc-500' : 'text-zinc-400'}`}>
+                      ₹{plan.originalPrice.toLocaleString('en-IN')}
+                    </span>
+                  )}
+                </div>
+
+                {/* Features */}
+                <ul className="space-y-3 mb-8 flex-1">
+                  {plan.features.map((f, j) => (
+                    <li key={j} className="flex items-start gap-2.5 text-sm">
+                      <Check className={`w-4 h-4 mt-0.5 shrink-0 ${plan.highlight ? 'text-primary' : 'text-emerald-500'}`} />
+                      <span className={plan.highlight ? 'text-zinc-300' : 'text-zinc-700'}>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* CTA */}
+                <button
+                  onClick={() => setCheckoutPlan(plan)}
+                  className={`w-full py-4 rounded-xl font-bold text-sm transition-all ${
+                    plan.highlight
+                      ? 'bg-primary text-white hover:bg-orange-600 shadow-lg shadow-orange-500/30'
+                      : 'bg-zinc-900 text-white hover:bg-zinc-800 shadow-md'
+                  }`}
+                >
+                  Get Started
+                </button>
+
+                {/* Warranty note */}
+                {plan.printer && (
+                  <p className={`text-[10px] mt-3 text-center ${plan.highlight ? 'text-zinc-500' : 'text-zinc-400'}`}>
+                    <Shield className="w-3 h-3 inline mr-1" />
+                    Hardware warranty by manufacturer
+                  </p>
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Key Features Grid ──────────────────────────────────────── */}
+      <section className="py-32 px-4 sm:px-6 lg:px-8 border-t border-white/20">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-zinc-900">
+              Everything You Need to Run Your Business
+            </h2>
+            <p className="mt-4 text-zinc-600 text-lg font-medium">
+              All features included in every plan. No module upsells, ever.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {features.map((f, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.08 }}
+                className="p-7 rounded-[2rem] bg-white/60 backdrop-blur-xl border border-white/60 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:bg-white/80 transition-all"
+              >
+                <div className={`p-3 w-fit rounded-2xl mb-5 shadow-sm border ${f.color}`}>
+                  <f.icon className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-bold text-zinc-900 mb-1.5">{f.title}</h3>
+                <p className="text-zinc-600 text-sm leading-relaxed">{f.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Play Store Apps Section ────────────────────────────────── */}
+      <section id="apps" className="py-32 px-4 sm:px-6 lg:px-8 border-t border-white/20">
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            
+
             {/* Left side App Selectors */}
             <div className="bg-white/40 p-10 rounded-[3rem] backdrop-blur-xl border border-white/50 shadow-xl">
               <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight mb-6 text-zinc-900">Official Mobile Suite</h2>
               <p className="text-zinc-700 text-lg mb-10 leading-relaxed font-medium">
-                Connect and sync mobile operations directly to your main cloud database. Select an app below to view its simulated screen layout inside the smartphone mockup.
+                Connect and sync mobile operations directly to your main cloud database.
               </p>
 
               <div className="space-y-6">
-                
                 {/* POS App Card */}
-                <div 
+                <div
                   onClick={() => setActiveApp('pos')}
                   className={`flex gap-5 items-start p-6 rounded-3xl border transition-all duration-300 cursor-pointer select-none ${
-                    activeApp === 'pos' 
-                      ? 'bg-white/95 border-primary/40 shadow-[0_8px_30px_rgba(0,0,0,0.06)] scale-[1.02]' 
+                    activeApp === 'pos'
+                      ? 'bg-white/95 border-primary/40 shadow-[0_8px_30px_rgba(0,0,0,0.06)] scale-[1.02]'
                       : 'bg-white/10 border-transparent hover:bg-white/40'
                   }`}
                 >
@@ -385,9 +494,9 @@ function App() {
                       <h4 className="text-xl font-bold text-zinc-900">Cafe QR POS App</h4>
                       {activeApp === 'pos' && <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>}
                     </div>
-                    <p className="text-zinc-600 text-sm mt-1 mb-3">Your master terminal register. Install on Android tablets, touch displays, or hand-held devices to process checkout bills immediately.</p>
-                    <a 
-                      href="https://play.google.com/store/apps/details?id=com.cafeqr.app" 
+                    <p className="text-zinc-600 text-sm mt-1 mb-3">Your master terminal register. Install on Android tablets, touch displays, or hand-held devices.</p>
+                    <a
+                      href="https://play.google.com/store/apps/details?id=com.cafeqr.app"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 text-sm font-bold text-primary hover:underline"
@@ -399,11 +508,11 @@ function App() {
                 </div>
 
                 {/* Delivery App Card */}
-                <div 
+                <div
                   onClick={() => setActiveApp('delivery')}
                   className={`flex gap-5 items-start p-6 rounded-3xl border transition-all duration-300 cursor-pointer select-none ${
-                    activeApp === 'delivery' 
-                      ? 'bg-white/95 border-primary/40 shadow-[0_8px_30px_rgba(0,0,0,0.06)] scale-[1.02]' 
+                    activeApp === 'delivery'
+                      ? 'bg-white/95 border-primary/40 shadow-[0_8px_30px_rgba(0,0,0,0.06)] scale-[1.02]'
                       : 'bg-white/10 border-transparent hover:bg-white/40'
                   }`}
                 >
@@ -413,9 +522,9 @@ function App() {
                       <h4 className="text-xl font-bold text-zinc-900">Cafe QR Delivery App</h4>
                       {activeApp === 'delivery' && <span className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse"></span>}
                     </div>
-                    <p className="text-zinc-600 text-sm mt-1 mb-3">Driver tracking and dispatch system. Allows fleet drivers to retrieve directions, track customer drops, and update ticket states.</p>
-                    <a 
-                      href="https://play.google.com/store/apps/details?id=com.cafeqr.delivery" 
+                    <p className="text-zinc-600 text-sm mt-1 mb-3">Driver tracking and dispatch system for fleet management.</p>
+                    <a
+                      href="https://play.google.com/store/apps/details?id=com.cafeqr.delivery"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 text-sm font-bold text-primary hover:underline"
@@ -425,32 +534,24 @@ function App() {
                     </a>
                   </div>
                 </div>
-
               </div>
             </div>
 
-            {/* Right side High-Fidelity Phone Simulator */}
+            {/* Right side Phone Simulator */}
             <div className="relative flex justify-center items-center">
               <div className="absolute w-72 h-72 bg-primary/10 rounded-full blur-[100px] -z-10"></div>
-              
-              {/* iPhone 15 Styled Device Frame */}
+
               <div className="w-full max-w-[325px] aspect-[9/19.2] bg-zinc-950 rounded-[3.2rem] p-3 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.15)] relative border-4 border-zinc-900/90 ring-1 ring-zinc-800">
-                
-                {/* Physical Side Buttons */}
                 <div className="absolute top-24 -left-1.5 w-1 h-12 bg-zinc-800 rounded-l-md border-l border-zinc-700"></div>
                 <div className="absolute top-38 -left-1.5 w-1 h-12 bg-zinc-800 rounded-l-md border-l border-zinc-700"></div>
                 <div className="absolute top-30 -right-1.5 w-1 h-16 bg-zinc-800 rounded-r-md border-r border-zinc-700"></div>
 
-                {/* Inner Screen Area */}
                 <div className="w-full h-full bg-zinc-900 rounded-[2.5rem] overflow-hidden relative flex flex-col justify-between border border-zinc-800 shadow-[inset_0_0_10px_rgba(0,0,0,0.8)]">
-                  
-                  {/* Dynamic Island Notch */}
                   <div className="absolute top-3.5 left-1/2 -translate-x-1/2 w-28 h-6.5 bg-black rounded-full z-30 flex items-center justify-between px-3 text-[9px]">
                     <div className="w-2 h-2 bg-zinc-900 rounded-full border border-zinc-800/80"></div>
                     <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
                   </div>
 
-                  {/* Top Status Bar UI */}
                   <div className="flex justify-between items-center px-6 pt-4 text-[10px] font-bold text-zinc-900 z-20 mix-blend-difference select-none pointer-events-none">
                     <span className="text-white">11:40 AM</span>
                     <div className="flex gap-1.5 text-white items-center">
@@ -459,20 +560,10 @@ function App() {
                     </div>
                   </div>
 
-                  {/* Main Display Container */}
                   <div className="flex-1 w-full bg-zinc-50 flex flex-col justify-between p-4 pt-8 overflow-hidden relative">
-                    
                     <AnimatePresence mode="wait">
                       {activeApp === 'pos' ? (
-                        <motion.div
-                          key="pos-screen"
-                          initial={{ opacity: 0, x: -30 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          exit={{ opacity: 0, x: 30 }}
-                          transition={{ duration: 0.25, ease: "easeInOut" }}
-                          className="w-full h-full flex flex-col justify-between pt-4"
-                        >
-                          {/* POS App Content */}
+                        <motion.div key="pos-screen" initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 30 }} transition={{ duration: 0.25, ease: "easeInOut" }} className="w-full h-full flex flex-col justify-between pt-4">
                           <div>
                             <div className="flex items-center gap-3 mb-6 bg-white p-3 rounded-2xl border border-zinc-200/50 shadow-sm">
                               <img src="/logo-pos.png" alt="POS App Logo" className="w-10 h-10 object-contain" />
@@ -484,31 +575,16 @@ function App() {
                                 </span>
                               </div>
                             </div>
-
-                            {/* Current Sale items */}
                             <div className="space-y-2.5">
                               <h6 className="text-[10px] font-extrabold text-zinc-400 uppercase tracking-wider px-1">Active Ticket</h6>
                               <div className="bg-white rounded-2xl p-3.5 border border-zinc-200/50 shadow-sm space-y-3">
-                                <div className="flex justify-between text-xs font-semibold text-zinc-800">
-                                  <span>2x Cappuccino</span>
-                                  <span className="font-bold text-zinc-900">₹360</span>
-                                </div>
-                                <div className="flex justify-between text-xs font-semibold text-zinc-800">
-                                  <span>1x Paneer Tikka Roll</span>
-                                  <span className="font-bold text-zinc-900">₹150</span>
-                                </div>
-                                <div className="flex justify-between text-xs font-semibold text-zinc-800 border-b border-dashed border-zinc-200 pb-2">
-                                  <span>1x Choco Lava Cake</span>
-                                  <span className="font-bold text-zinc-900">₹90</span>
-                                </div>
-                                <div className="flex justify-between text-sm font-bold text-zinc-900 pt-1">
-                                  <span>Total Amount</span>
-                                  <span className="text-primary font-extrabold text-base">₹600</span>
-                                </div>
+                                <div className="flex justify-between text-xs font-semibold text-zinc-800"><span>2x Cappuccino</span><span className="font-bold text-zinc-900">₹360</span></div>
+                                <div className="flex justify-between text-xs font-semibold text-zinc-800"><span>1x Paneer Tikka Roll</span><span className="font-bold text-zinc-900">₹150</span></div>
+                                <div className="flex justify-between text-xs font-semibold text-zinc-800 border-b border-dashed border-zinc-200 pb-2"><span>1x Choco Lava Cake</span><span className="font-bold text-zinc-900">₹90</span></div>
+                                <div className="flex justify-between text-sm font-bold text-zinc-900 pt-1"><span>Total Amount</span><span className="text-primary font-extrabold text-base">₹600</span></div>
                               </div>
                             </div>
                           </div>
-
                           <div className="space-y-2.5">
                             <button className="w-full py-3.5 bg-primary text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 hover:bg-orange-600 transition-colors shadow-md">
                               <ShoppingBag className="w-4 h-4" /> Print Bill & Checkout
@@ -517,15 +593,7 @@ function App() {
                           </div>
                         </motion.div>
                       ) : (
-                        <motion.div
-                          key="delivery-screen"
-                          initial={{ opacity: 0, x: 30 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          exit={{ opacity: 0, x: -30 }}
-                          transition={{ duration: 0.25, ease: "easeInOut" }}
-                          className="w-full h-full flex flex-col justify-between pt-4"
-                        >
-                          {/* Delivery App Content */}
+                        <motion.div key="delivery-screen" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.25, ease: "easeInOut" }} className="w-full h-full flex flex-col justify-between pt-4">
                           <div>
                             <div className="flex items-center gap-3 mb-6 bg-white p-3 rounded-2xl border border-zinc-200/50 shadow-sm">
                               <img src="/logo-delivery.png" alt="Delivery App Logo" className="w-10 h-10 object-contain" />
@@ -537,12 +605,8 @@ function App() {
                                 </span>
                               </div>
                             </div>
-
-                            {/* Delivery Queue */}
                             <div className="space-y-3">
                               <h6 className="text-[10px] font-extrabold text-zinc-400 uppercase tracking-wider px-1">Upcoming Deliveries</h6>
-                              
-                              {/* Order Card */}
                               <div className="bg-white rounded-2xl p-3 border border-zinc-200/50 shadow-sm flex items-center justify-between">
                                 <div className="space-y-0.5">
                                   <span className="text-[10px] font-bold text-zinc-400">Order #4829</span>
@@ -551,19 +615,14 @@ function App() {
                                 </div>
                                 <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-1 rounded-full shrink-0">Ready</span>
                               </div>
-
-                              {/* GPS Mini Map Simulation */}
                               <div className="h-28 bg-sky-50 border border-sky-100 rounded-2xl relative overflow-hidden flex items-center justify-center p-2 shadow-inner">
-                                {/* Simulated Route Line */}
                                 <svg className="absolute w-full h-full inset-0 p-4" viewBox="0 0 100 50">
                                   <path d="M 10 40 Q 50 10 90 30" fill="none" stroke="#CBD5E1" strokeWidth="3" strokeLinecap="round" />
                                   <path d="M 10 40 Q 50 10 90 30" fill="none" stroke="#F97316" strokeWidth="3" strokeLinecap="round" strokeDasharray="6 3" />
                                 </svg>
-                                {/* Start Point Dot */}
                                 <div className="absolute left-[13%] bottom-[20%] w-3 h-3 bg-zinc-900 rounded-full border-2 border-white shadow-sm flex items-center justify-center">
                                   <div className="w-1 h-1 bg-white rounded-full"></div>
                                 </div>
-                                {/* End Point Marker */}
                                 <div className="absolute right-[13%] bottom-[38%] text-primary animate-bounce">
                                   <MapPin className="w-4 h-4 fill-primary text-white" />
                                 </div>
@@ -571,7 +630,6 @@ function App() {
                               </div>
                             </div>
                           </div>
-
                           <div className="space-y-2.5">
                             <button className="w-full py-3.5 bg-zinc-900 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 hover:bg-zinc-800 transition-colors shadow-md">
                               Start Delivery Route
@@ -581,14 +639,10 @@ function App() {
                         </motion.div>
                       )}
                     </AnimatePresence>
-
                   </div>
 
-                  {/* Home Swipe Indicator */}
                   <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-28 h-1 bg-zinc-300 rounded-full z-20"></div>
-
                 </div>
-
               </div>
             </div>
 
@@ -596,18 +650,35 @@ function App() {
         </div>
       </section>
 
-      {/* Footer */}
+      {/* ── FAQ ────────────────────────────────────────────────────── */}
+      <FAQ />
+
+      {/* ── Terms & Conditions ─────────────────────────────────────── */}
+      <TermsSection />
+
+      {/* ── Footer ─────────────────────────────────────────────────── */}
       <footer className="border-t border-white/30 py-12 px-4 text-center text-zinc-500 text-sm bg-white/40 backdrop-blur-xl relative z-10">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-3">
             <img src="/logo.png" alt="Cafe QR Logo" className="w-8 h-8 object-contain rounded-md" />
             <span className="font-bold text-zinc-900">Cafe QR POS ERP Ecosystem</span>
           </div>
-          <p>© {new Date().getFullYear()} Cafe QR. All rights reserved.</p>
+          <div className="flex items-center gap-4">
+            <a href="#terms" className="text-zinc-500 hover:text-zinc-700 font-medium transition-colors">Terms & Conditions</a>
+            <span className="text-zinc-300">•</span>
+            <p>© {new Date().getFullYear()} Cafe QR. All rights reserved.</p>
+          </div>
         </div>
       </footer>
 
-
+      {/* ── Checkout Modal ─────────────────────────────────────────── */}
+      {checkoutPlan && (
+        <CheckoutModal
+          plan={checkoutPlan}
+          onClose={() => setCheckoutPlan(null)}
+          backendApiUrl={backendApiUrl}
+        />
+      )}
 
     </div>
   );
