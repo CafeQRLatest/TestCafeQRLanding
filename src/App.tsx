@@ -14,11 +14,20 @@ import {
   Truck,
   Check,
   Star,
-  Shield
+  Shield,
+  MessageCircle,
+  Banknote,
+  QrCode,
+  CreditCard,
+  RotateCcw,
+  Loader2,
 } from 'lucide-react';
 import CheckoutModal from './components/CheckoutModal';
 import FAQ from './components/FAQ';
 import Terms from './pages/Terms';
+import GooglePreferredSourceBanner from './components/GooglePreferredSourceBanner';
+import GoogleReviewsSection from './components/GoogleReviewsSection';
+import FloatingWhatsApp from './components/FloatingWhatsApp';
 
 // ── Pricing Plans ─────────────────────────────────────────────────────────────
 
@@ -131,6 +140,28 @@ function App() {
   const [backendApiUrl, setBackendApiUrl] = useState<string>('https://api.cafeqr.in');
   const [checkoutPlan, setCheckoutPlan] = useState<PricingPlan | null>(null);
 
+  // POS V2 Settle Order & Print Simulation State
+  const [showSettleModal, setShowSettleModal] = useState<boolean>(false);
+  const [settleMethod, setSettleMethod] = useState<'CASH' | 'UPI' | 'CARD'>('UPI');
+  const [isPrinting, setIsPrinting] = useState<boolean>(false);
+  const [receiptEjected, setReceiptEjected] = useState<boolean>(false);
+
+  const handleSettleOrder = () => {
+    setIsPrinting(true);
+    setTimeout(() => {
+      setIsPrinting(false);
+      setShowSettleModal(false);
+      setReceiptEjected(true);
+    }, 550);
+  };
+
+  const resetSimulator = () => {
+    setShowSettleModal(false);
+    setReceiptEjected(false);
+    setIsPrinting(false);
+    setSettleMethod('UPI');
+  };
+
   useEffect(() => {
     setPosLoginUrl(getPosLoginUrl());
     setBackendApiUrl(getBackendApiUrl());
@@ -198,13 +229,24 @@ function App() {
   return (
     <div className="relative min-h-screen bg-zinc-50 text-zinc-900 overflow-hidden font-sans">
 
+      {/* Google Preferred Source Banner */}
+      <GooglePreferredSourceBanner />
+
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center p-5 lg:px-8 bg-white/50 backdrop-blur-2xl border-b border-white/40 shadow-[0_4px_30px_rgba(0,0,0,0.02)]">
+      <nav className="sticky top-0 left-0 right-0 z-50 flex justify-between items-center p-4 lg:px-8 bg-white/75 backdrop-blur-2xl border-b border-white/40 shadow-[0_4px_30px_rgba(0,0,0,0.02)]">
         <div className="flex items-center gap-3">
           <img src="/logo.png" alt="Cafe QR Logo" className="w-10 h-10 object-contain rounded-md" />
           <span className="text-xl font-bold tracking-tight text-zinc-900">Cafe QR ERP</span>
         </div>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4">
+          <a
+            href="https://wa.me/917012120844?text=Hi%20CafeQR!%20I%20run%20a%20restaurant/cafe%20and%20would%20like%20a%20free%205-minute%20live%20demo%20and%20pricing%20details."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-full border border-emerald-200 transition-colors"
+          >
+            <MessageCircle className="w-3.5 h-3.5 fill-current" /> Free WhatsApp Demo
+          </a>
           <a
             href={posLoginUrl}
             className="px-6 py-2.5 bg-zinc-900/90 backdrop-blur-md text-white rounded-full font-semibold hover:bg-zinc-800 transition-colors shadow-lg text-sm"
@@ -215,8 +257,28 @@ function App() {
       </nav>
 
       {/* ── Hero Section ───────────────────────────────────────────── */}
-      <section className="relative min-h-[100vh] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 pt-20">
+      <section className="relative min-h-[90vh] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 pt-12 pb-16">
         <div className="relative z-10 text-center max-w-4xl mx-auto pointer-events-none select-none flex flex-col items-center">
+          
+          {/* Google Verified Review Badge */}
+          <a
+            href="https://g.page/r/CbYBpqFk3xOFEBM/review"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mb-4 inline-flex items-center gap-2 px-4 py-1.5 bg-white/90 hover:bg-white backdrop-blur-md border border-zinc-200/80 shadow-sm rounded-full text-xs font-semibold text-zinc-800 transition-all hover:scale-105 pointer-events-auto cursor-pointer"
+          >
+            <span className="flex items-center justify-center w-4 h-4">
+              <svg viewBox="0 0 24 24" className="w-4 h-4">
+                <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.65v3.03h3.88c2.28-2.1 3.665-5.2 3.665-9.12z" />
+                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.03c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.24v3.13C3.26 21.43 7.33 24 12 24z" />
+                <path fill="#FBBC05" d="M5.28 14.29c-.25-.72-.38-1.49-.38-2.29s.13-1.57.38-2.29V6.57H1.24C.45 8.14 0 9.97 0 12s.45 3.86 1.24 5.43l4.04-3.14z" />
+                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.57 1.24 6.57l4.04 3.14c.95-2.83 3.6-4.96 6.72-4.96z" />
+              </svg>
+            </span>
+            <span>Rated <strong>4.9/5</strong> on Google Business Profile</span>
+            <span className="text-amber-500">★★★★★</span>
+          </a>
+
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
@@ -249,19 +311,27 @@ function App() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
-            className="mt-10 flex flex-col sm:flex-row gap-4 pointer-events-auto"
+            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3.5 pointer-events-auto w-full max-w-lg mx-auto"
           >
             <a
-              href="#pricing"
-              className="px-8 py-4 bg-primary text-white rounded-full font-bold flex items-center justify-center gap-2 hover:bg-orange-600 transition-all shadow-xl shadow-orange-500/20 hover:shadow-orange-500/30 cursor-pointer"
+              href="https://wa.me/917012120844?text=Hi%20CafeQR!%20I%20run%20a%20restaurant/cafe%20and%20would%20like%20a%20free%205-minute%20live%20demo%20and%20pricing%20details."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto px-7 py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full font-bold flex items-center justify-center gap-2 shadow-xl shadow-emerald-600/25 hover:shadow-emerald-600/35 transition-all text-sm cursor-pointer"
             >
-              See Pricing <ChevronRight className="w-4 h-4" />
+              <MessageCircle className="w-4 h-4 fill-current" /> Book Free 5-Min Live Demo
+            </a>
+            <a
+              href="#pricing"
+              className="w-full sm:w-auto px-7 py-4 bg-primary text-white rounded-full font-bold flex items-center justify-center gap-2 hover:bg-orange-600 transition-all shadow-xl shadow-orange-500/20 hover:shadow-orange-500/30 text-sm cursor-pointer"
+            >
+              See Pricing & Kits <ChevronRight className="w-4 h-4" />
             </a>
             <a
               href={posLoginUrl}
-              className="px-8 py-4 bg-white border border-zinc-200 text-zinc-700 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-zinc-50 transition-all shadow-sm cursor-pointer"
+              className="w-full sm:w-auto px-5 py-4 bg-white/90 hover:bg-white border border-zinc-200 text-zinc-700 rounded-full font-bold flex items-center justify-center gap-1.5 transition-all shadow-sm text-sm cursor-pointer"
             >
-              Already a user? Login
+              Login
             </a>
           </motion.div>
         </div>
@@ -559,35 +629,230 @@ function App() {
                   <div className="flex-1 w-full bg-zinc-50 flex flex-col justify-between p-4 pt-8 overflow-hidden relative">
                     <AnimatePresence mode="wait">
                       {activeApp === 'pos' ? (
-                        <motion.div key="pos-screen" initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 30 }} transition={{ duration: 0.25, ease: "easeInOut" }} className="w-full h-full flex flex-col justify-between pt-4">
-                          <div>
-                            <div className="flex items-center gap-3 mb-6 bg-white p-3 rounded-2xl border border-zinc-200/50 shadow-sm">
-                              <img src="/logo-pos.png" alt="POS App Logo" className="w-10 h-10 object-contain" />
-                              <div>
-                                <h5 className="font-extrabold text-zinc-900 text-sm leading-tight">Cafe QR POS</h5>
-                                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full mt-0.5 border border-emerald-100">
-                                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
-                                  ERP Sync Active
-                                </span>
+                        receiptEjected ? (
+                          <motion.div
+                            key="pos-receipt"
+                            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            transition={{ type: "spring", stiffness: 280, damping: 22 }}
+                            className="w-full h-full flex flex-col justify-between pt-2 pb-1"
+                          >
+                            <div className="bg-amber-50/70 rounded-xl p-2.5 border border-amber-200/90 shadow-md font-mono text-zinc-800 text-[9px] leading-tight flex-1 overflow-y-auto">
+                              <div className="text-center border-b border-dashed border-zinc-400 pb-1.5 mb-1.5">
+                                <div className="font-extrabold text-[11px] text-zinc-900 tracking-wider">CAFE QR RESTAURANT</div>
+                                <div className="text-[8px] text-zinc-500">GSTIN: 32AABCU9603R1ZM</div>
+                                <div className="text-[7.5px] text-zinc-400 mt-0.5">Bill: #1042 • Table: 04 • POS V2</div>
+                              </div>
+                              <div className="space-y-1 py-1">
+                                <div className="flex justify-between font-semibold">
+                                  <span>2x Cappuccino</span>
+                                  <span>₹360.00</span>
+                                </div>
+                                <div className="flex justify-between font-semibold">
+                                  <span>1x Paneer Tikka</span>
+                                  <span>₹150.00</span>
+                                </div>
+                                <div className="flex justify-between font-semibold">
+                                  <span>1x Choco Lava</span>
+                                  <span>₹90.00</span>
+                                </div>
+                              </div>
+                              <div className="border-t border-dashed border-zinc-400 my-1 pt-1 space-y-0.5 text-[8px] text-zinc-600">
+                                <div className="flex justify-between">
+                                  <span>Subtotal</span>
+                                  <span>₹571.43</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span>CGST (2.5%)</span>
+                                  <span>₹14.28</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span>SGST (2.5%)</span>
+                                  <span>₹14.28</span>
+                                </div>
+                              </div>
+                              <div className="border-t-2 border-zinc-900 my-1 pt-1 flex justify-between font-extrabold text-[11px] text-zinc-900">
+                                <span>TOTAL PAID</span>
+                                <span className="text-emerald-700">₹600.00</span>
+                              </div>
+                              <div className="text-center pt-1.5 text-[7.5px] text-zinc-500 border-t border-dashed border-zinc-300">
+                                <span className="inline-block bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.2 rounded text-[7.5px] mb-0.5">PAID VIA {settleMethod}</span>
+                                <div>*** Thank You! Visit Again ***</div>
+                                <div className="text-[7px] text-zinc-400">80mm Bluetooth ESC/POS</div>
                               </div>
                             </div>
-                            <div className="space-y-2.5">
-                              <h6 className="text-[10px] font-extrabold text-zinc-400 uppercase tracking-wider px-1">Active Ticket</h6>
-                              <div className="bg-white rounded-2xl p-3.5 border border-zinc-200/50 shadow-sm space-y-3">
-                                <div className="flex justify-between text-xs font-semibold text-zinc-800"><span>2x Cappuccino</span><span className="font-bold text-zinc-900">₹360</span></div>
-                                <div className="flex justify-between text-xs font-semibold text-zinc-800"><span>1x Paneer Tikka Roll</span><span className="font-bold text-zinc-900">₹150</span></div>
-                                <div className="flex justify-between text-xs font-semibold text-zinc-800 border-b border-dashed border-zinc-200 pb-2"><span>1x Choco Lava Cake</span><span className="font-bold text-zinc-900">₹90</span></div>
-                                <div className="flex justify-between text-sm font-bold text-zinc-900 pt-1"><span>Total Amount</span><span className="text-primary font-extrabold text-base">₹600</span></div>
+
+                            <div className="pt-2 space-y-1">
+                              <button
+                                onClick={resetSimulator}
+                                className="w-full py-2 bg-zinc-900 hover:bg-zinc-800 text-white font-bold rounded-xl text-[11px] flex items-center justify-center gap-1.5 shadow transition-colors"
+                              >
+                                <RotateCcw className="w-3.5 h-3.5 text-orange-400" /> Tear Receipt & New Order
+                              </button>
+                              <span className="text-[8px] text-emerald-600 block text-center font-bold">
+                                ✓ Live Inventory & ERP Sync Complete
+                              </span>
+                            </div>
+                          </motion.div>
+                        ) : showSettleModal ? (
+                          <motion.div
+                            key="pos-settle-dialog"
+                            initial={{ opacity: 0, y: 25 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 25 }}
+                            transition={{ duration: 0.2 }}
+                            className="w-full h-full flex flex-col justify-between pt-2 pb-1 bg-white rounded-2xl p-2.5 shadow-lg border border-zinc-200"
+                          >
+                            <div>
+                              <div className="flex items-center justify-between border-b border-zinc-100 pb-1.5 mb-2">
+                                <div>
+                                  <span className="text-[8px] font-bold text-zinc-400 uppercase tracking-wider">POS V2 Settle Order</span>
+                                  <h5 className="font-extrabold text-zinc-900 text-xs">Table 04 • ₹600.00</h5>
+                                </div>
+                                <button
+                                  onClick={() => setShowSettleModal(false)}
+                                  className="text-zinc-400 hover:text-zinc-700 text-xs font-bold p-1 rounded-md"
+                                >
+                                  ✕
+                                </button>
+                              </div>
+
+                              {/* Payment Method Selector */}
+                              <div className="grid grid-cols-3 gap-1 bg-zinc-100 p-1 rounded-xl mb-2.5">
+                                {(['UPI', 'CASH', 'CARD'] as const).map((method) => (
+                                  <button
+                                    key={method}
+                                    onClick={() => setSettleMethod(method)}
+                                    className={`py-1 text-[9.5px] font-bold rounded-lg transition-all flex items-center justify-center gap-1 ${
+                                      settleMethod === method
+                                        ? 'bg-white text-zinc-900 shadow-sm'
+                                        : 'text-zinc-500 hover:text-zinc-800'
+                                    }`}
+                                  >
+                                    {method === 'UPI' && <QrCode className="w-2.5 h-2.5 text-primary" />}
+                                    {method === 'CASH' && <Banknote className="w-2.5 h-2.5 text-emerald-600" />}
+                                    {method === 'CARD' && <CreditCard className="w-2.5 h-2.5 text-blue-600" />}
+                                    {method}
+                                  </button>
+                                ))}
+                              </div>
+
+                              {/* Method Details */}
+                              {settleMethod === 'UPI' && (
+                                <div className="bg-orange-50/70 border border-orange-200/60 rounded-xl p-2 flex flex-col items-center text-center">
+                                  <div className="w-16 h-16 bg-white p-1 rounded-lg border border-orange-300 shadow-sm flex items-center justify-center relative">
+                                    <svg viewBox="0 0 100 100" className="w-full h-full text-zinc-900 fill-current">
+                                      <path d="M0,0 h30 v30 h-30 z M10,10 h10 v10 h-10 z" />
+                                      <path d="M70,0 h30 v30 h-30 z M80,10 h10 v10 h-10 z" />
+                                      <path d="M0,70 h30 v30 h-30 z M10,80 h10 v10 h-10 z" />
+                                      <path d="M40,10 h20 v10 h-20 z M40,30 h10 v20 h-10 z M60,40 h30 v10 h-30 z M40,70 h20 v20 h-20 z M70,70 h20 v10 h-20 z M80,90 h10 v10 h-10 z" />
+                                    </svg>
+                                    <div className="absolute inset-0 border-2 border-primary/40 rounded-lg animate-pulse pointer-events-none" />
+                                  </div>
+                                  <span className="text-[8.5px] font-bold text-zinc-800 mt-1.5">Scan with GPay / PhonePe / Paytm</span>
+                                  <span className="text-[7.5px] text-zinc-500">Auto-detects incoming UPI payment webhook</span>
+                                </div>
+                              )}
+
+                              {settleMethod === 'CASH' && (
+                                <div className="bg-emerald-50/70 border border-emerald-200/60 rounded-xl p-2 space-y-1.5">
+                                  <div className="text-[8.5px] font-semibold text-zinc-700">Quick Tender:</div>
+                                  <div className="grid grid-cols-3 gap-1">
+                                    <span className="px-1.5 py-1 bg-white border border-emerald-300 rounded text-[8.5px] font-bold text-center text-emerald-800">₹600 (Exact)</span>
+                                    <span className="px-1.5 py-1 bg-white border border-zinc-200 rounded text-[8.5px] font-bold text-center text-zinc-700">₹1,000</span>
+                                    <span className="px-1.5 py-1 bg-white border border-zinc-200 rounded text-[8.5px] font-bold text-center text-zinc-700">₹2,000</span>
+                                  </div>
+                                  <div className="flex justify-between text-[8.5px] font-bold text-zinc-800 pt-1 border-t border-emerald-200/50">
+                                    <span>Change Return:</span>
+                                    <span className="text-emerald-700 font-extrabold">₹0.00</span>
+                                  </div>
+                                </div>
+                              )}
+
+                              {settleMethod === 'CARD' && (
+                                <div className="bg-blue-50/70 border border-blue-200/60 rounded-xl p-2.5 flex flex-col items-center text-center">
+                                  <CreditCard className="w-7 h-7 text-blue-600 mb-1" />
+                                  <span className="text-[9px] font-bold text-zinc-800">EDC Card Machine</span>
+                                  <span className="text-[7.5px] text-zinc-500">Swipe, Dip or Tap card on POS Terminal</span>
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="space-y-1 pt-1.5">
+                              <button
+                                onClick={handleSettleOrder}
+                                disabled={isPrinting}
+                                className="w-full py-2.5 bg-primary hover:bg-orange-600 disabled:opacity-75 text-white font-bold rounded-xl text-[11px] flex items-center justify-center gap-1.5 shadow-md transition-all"
+                              >
+                                {isPrinting ? (
+                                  <>
+                                    <Loader2 className="w-3 h-3 animate-spin" />
+                                    <span>Printing Thermal Bill...</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Printer className="w-3 h-3" />
+                                    <span>Complete & Print Bill (₹600)</span>
+                                  </>
+                                )}
+                              </button>
+                              <span className="text-[7.5px] text-zinc-400 block text-center font-medium">
+                                Sends ESC/POS command to 58mm/80mm printer
+                              </span>
+                            </div>
+                          </motion.div>
+                        ) : (
+                          <motion.div
+                            key="pos-screen"
+                            initial={{ opacity: 0, x: -30 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: 30 }}
+                            transition={{ duration: 0.25, ease: "easeInOut" }}
+                            className="w-full h-full flex flex-col justify-between pt-2 pb-1"
+                          >
+                            <div>
+                              <div className="flex items-center gap-2 mb-2 bg-white p-2 rounded-2xl border border-zinc-200/50 shadow-sm">
+                                <img src="/logo-pos.png" alt="POS App Logo" className="w-8 h-8 object-contain" />
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center justify-between">
+                                    <h5 className="font-extrabold text-zinc-900 text-xs leading-tight">Cafe QR POS V2</h5>
+                                    <span className="text-[8.5px] font-bold text-zinc-500">Table 04</span>
+                                  </div>
+                                  <span className="inline-flex items-center gap-1 text-[8px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.2 rounded-full border border-emerald-100">
+                                    <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                                    Printer Connected
+                                  </span>
+                                </div>
+                              </div>
+
+                              <div className="space-y-1.5">
+                                <div className="flex justify-between items-center px-1">
+                                  <h6 className="text-[8.5px] font-extrabold text-zinc-400 uppercase tracking-wider">Active Ticket #1042</h6>
+                                  <span className="text-[8px] bg-orange-100 text-primary font-bold px-1.5 py-0.2 rounded">3 Items</span>
+                                </div>
+                                <div className="bg-white rounded-2xl p-2.5 border border-zinc-200/50 shadow-sm space-y-1.5">
+                                  <div className="flex justify-between text-[10.5px] font-semibold text-zinc-800"><span>2x Cappuccino</span><span className="font-bold text-zinc-900">₹360</span></div>
+                                  <div className="flex justify-between text-[10.5px] font-semibold text-zinc-800"><span>1x Paneer Tikka</span><span className="font-bold text-zinc-900">₹150</span></div>
+                                  <div className="flex justify-between text-[10.5px] font-semibold text-zinc-800 border-b border-dashed border-zinc-200 pb-1"><span>1x Choco Lava</span><span className="font-bold text-zinc-900">₹90</span></div>
+                                  <div className="flex justify-between text-xs font-bold text-zinc-900 pt-0.5"><span>Total Due</span><span className="text-primary font-extrabold text-sm">₹600</span></div>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          <div className="space-y-2.5">
-                            <button className="w-full py-3.5 bg-primary text-white font-bold rounded-xl text-xs flex items-center justify-center gap-2 hover:bg-orange-600 transition-colors shadow-md">
-                              <ShoppingBag className="w-4 h-4" /> Print Bill & Checkout
-                            </button>
-                            <span className="text-[9px] text-zinc-400 block text-center font-semibold">Registered: Terminal Counter #1</span>
-                          </div>
-                        </motion.div>
+
+                            <div className="space-y-1.5 pt-1.5">
+                              <button
+                                onClick={() => setShowSettleModal(true)}
+                                className="w-full py-2.5 bg-primary hover:bg-orange-600 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md transition-all active:scale-[0.98]"
+                              >
+                                <ShoppingBag className="w-3.5 h-3.5" /> Settle Order (₹600)
+                              </button>
+                              <span className="text-[8px] text-zinc-400 block text-center font-medium">
+                                Tap to test Cash / UPI / Card Settle Flow
+                              </span>
+                            </div>
+                          </motion.div>
+                        )
                       ) : (
                         <motion.div key="delivery-screen" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.25, ease: "easeInOut" }} className="w-full h-full flex flex-col justify-between pt-4">
                           <div>
@@ -646,41 +911,64 @@ function App() {
         </div>
       </section>
 
+      {/* ── Google Reviews Section ─────────────────────────────────── */}
+      <GoogleReviewsSection />
+
       {/* ── FAQ ────────────────────────────────────────────────────── */}
       <FAQ />
 
       {/* ── Footer ─────────────────────────────────────────────────── */}
       <footer className="border-t border-white/30 py-12 px-4 text-center text-zinc-500 text-sm bg-white/40 backdrop-blur-xl relative z-10">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="Cafe QR Logo" className="w-8 h-8 object-contain rounded-md" />
-            <span className="font-bold text-zinc-900">Cafe QR POS ERP Ecosystem</span>
+        <div className="max-w-7xl mx-auto space-y-6">
+          <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-xs font-semibold text-zinc-600">
+            <span className="text-zinc-400 uppercase tracking-wider text-[11px] font-bold">Solutions:</span>
+            <a href="/pos-for-restaurants/" className="hover:text-primary transition-colors">Restaurants</a>
+            <span className="text-zinc-300">•</span>
+            <a href="/pos-for-cafes/" className="hover:text-primary transition-colors">Cafes & QSR</a>
+            <span className="text-zinc-300">•</span>
+            <a href="/pos-for-bakeries/" className="hover:text-primary transition-colors">Bakeries</a>
+            <span className="text-zinc-300">•</span>
+            <a href="/pos-for-food-trucks/" className="hover:text-primary transition-colors">Food Trucks</a>
+            <span className="text-zinc-300">•</span>
+            <a href="/bluetooth-thermal-printer-billing/" className="hover:text-primary transition-colors">Thermal Printers</a>
+            <span className="text-zinc-300">•</span>
+            <a href="https://g.page/r/CbYBpqFk3xOFEBM/review" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 transition-colors">Google Reviews (4.9★)</a>
           </div>
-          <div className="flex items-center gap-4">
-            <a
-              href="/blog/best-pos-billing-software-2026/"
-              className="text-zinc-500 hover:text-zinc-700 font-medium transition-colors cursor-pointer"
-            >
-              Read our Blog
-            </a>
-            <span className="text-zinc-300">•</span>
-            <a
-              href="#terms"
-              onClick={(e) => {
-                e.preventDefault();
-                window.location.hash = 'terms';
-                setCurrentView('terms');
-                window.scrollTo(0, 0);
-              }}
-              className="text-zinc-500 hover:text-zinc-700 font-medium transition-colors cursor-pointer"
-            >
-              Terms & Conditions
-            </a>
-            <span className="text-zinc-300">•</span>
-            <p>© {new Date().getFullYear()} Cafe QR. All rights reserved.</p>
+
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-6 pt-4 border-t border-zinc-200/50">
+            <div className="flex items-center gap-3">
+              <img src="/logo.png" alt="Cafe QR Logo" className="w-8 h-8 object-contain rounded-md" />
+              <span className="font-bold text-zinc-900">Cafe QR POS ERP Ecosystem</span>
+            </div>
+            <div className="flex items-center gap-4 text-xs">
+              <a
+                href="/blog/best-pos-billing-software-2026/"
+                className="text-zinc-500 hover:text-zinc-700 font-medium transition-colors cursor-pointer"
+              >
+                Read our Blog
+              </a>
+              <span className="text-zinc-300">•</span>
+              <a
+                href="#terms"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.location.hash = 'terms';
+                  setCurrentView('terms');
+                  window.scrollTo(0, 0);
+                }}
+                className="text-zinc-500 hover:text-zinc-700 font-medium transition-colors cursor-pointer"
+              >
+                Terms & Conditions
+              </a>
+              <span className="text-zinc-300">•</span>
+              <p>© {new Date().getFullYear()} Cafe QR. All rights reserved.</p>
+            </div>
           </div>
         </div>
       </footer>
+
+      {/* ── Sticky Responsive WhatsApp Floating Action Button ───────── */}
+      <FloatingWhatsApp />
 
       {/* ── Checkout Modal ─────────────────────────────────────────── */}
       {checkoutPlan && (

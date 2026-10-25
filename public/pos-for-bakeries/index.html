@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Bakery POS & Billing Software with Advance Cake Orders | CafeQR</title>
+  <meta name="description" content="Dedicated Bakery POS software for cake shops, patisseries, and sweet bakeries. Weight-based pricing, custom cake advance booking with photo attachment, batch expiry tracking, and thermal receipt printing.">
+  <meta name="keywords" content="bakery POS software, cake shop billing machine, advance cake order software, bakery billing system, weight based billing, CafeQR POS">
+  <link rel="canonical" href="https://www.cafeqr.in/pos-for-bakeries/">
+
+  <!-- Open Graph / Meta -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="CafeQR POS ERP">
+  <meta property="og:url" content="https://www.cafeqr.in/pos-for-bakeries/">
+  <meta property="og:title" content="Bakery POS & Billing Software with Advance Orders | CafeQR">
+  <meta property="og:description" content="Manage custom birthday cake bookings, weight variants (0.5kg/1kg), ingredient batches, and fast counter billing with CafeQR.">
+  <meta property="og:image" content="https://www.cafeqr.in/logo.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <!-- Apple Safari & Mobile -->
+  <link rel="apple-touch-icon" href="/logo.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="CafeQR Bakery POS">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" href="/logo.png">
+
+  <!-- Structured Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "CafeQR Bakery POS Software",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Android, Web, Windows, iOS",
+        "offers": {
+          "@type": "Offer",
+          "price": "2499",
+          "priceCurrency": "INR",
+          "availability": "https://schema.org/InStock"
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.9",
+          "reviewCount": "128",
+          "bestRating": "5"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.cafeqr.in/" },
+          { "@type": "ListItem", "position": 2, "name": "POS for Bakeries", "item": "https://www.cafeqr.in/pos-for-bakeries/" }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Can we take advance bookings for custom birthday cakes with advance token payments?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes! CafeQR includes a specialized Advance Cake Order calendar. Record delivery date & time, customer phone number, cake flavor, weight, custom message, and record advance deposit vs balance due upon pickup."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does CafeQR support selling items by weight (per kg, per 100g)?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Easily configure items with weight variants (0.5 kg, 1.0 kg, 2.0 kg) or variable decimal weights for cookies, dry sweets, and savories."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --primary: #F97316;
+      --primary-hover: #EA580C;
+      --zinc-900: #0F172A;
+      --zinc-800: #1E293B;
+      --zinc-600: #475569;
+      --zinc-100: #F1F5F9;
+      --zinc-50: #F8FAFC;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--zinc-900);
+      background-color: var(--zinc-50);
+      -webkit-font-smoothing: antialiased;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid #E2E8F0;
+      padding: 0.875rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo-box { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; font-weight: 800; font-size: 1.15rem; }
+    .logo-box img { width: 36px; height: 36px; border-radius: 8px; }
+    .btn-wa {
+      background: #10B981;
+      color: #fff;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.875rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+    .btn-wa:hover { background: #059669; }
+    .hero {
+      max-width: 1080px;
+      margin: 3rem auto 2rem;
+      padding: 0 1.5rem;
+      text-align: center;
+    }
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #FFEDD5;
+      color: #C2410C;
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      margin-bottom: 1.25rem;
+    }
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 900;
+      line-height: 1.15;
+      color: var(--zinc-900);
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.02em;
+    }
+    h1 span { color: var(--primary); }
+    .lead {
+      font-size: 1.125rem;
+      color: var(--zinc-600);
+      max-width: 760px;
+      margin: 0 auto 2rem;
+    }
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 2.5rem;
+    }
+    .cta-primary {
+      background: var(--primary);
+      color: #fff;
+      padding: 0.875rem 1.75rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      box-shadow: 0 10px 25px -5px rgba(249, 115, 22, 0.4);
+      transition: all 0.2s;
+    }
+    .cta-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+    .cta-secondary {
+      background: #fff;
+      color: var(--zinc-900);
+      border: 1px solid #CBD5E1;
+      padding: 0.875rem 1.75rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .cta-secondary:hover { background: var(--zinc-100); }
+    .social-proof-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 0.875rem;
+      color: var(--zinc-600);
+      font-weight: 600;
+      margin-bottom: 3rem;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      max-width: 1080px;
+      margin: 0 auto 4rem;
+      padding: 0 1.5rem;
+    }
+    .feature-card {
+      background: #fff;
+      border: 1px solid #E2E8F0;
+      border-radius: 1.25rem;
+      padding: 1.75rem;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
+    }
+    .feature-card h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--zinc-900); }
+    .feature-card p { font-size: 0.925rem; color: var(--zinc-600); line-height: 1.5; }
+    .comparison-section {
+      max-width: 960px;
+      margin: 0 auto 4rem;
+      padding: 0 1.5rem;
+    }
+    .comparison-section h2 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .table-container {
+      overflow-x: auto;
+      background: #fff;
+      border-radius: 1rem;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+    }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+    th, td { padding: 1rem 1.25rem; border-bottom: 1px solid #F1F5F9; }
+    th { background: #F8FAFC; font-weight: 700; color: var(--zinc-800); }
+    .highlight-col { background: #FFF7ED; font-weight: 700; color: #C2410C; }
+    .faq-section {
+      max-width: 800px;
+      margin: 0 auto 5rem;
+      padding: 0 1.5rem;
+    }
+    .faq-section h2 { font-size: 1.75rem; font-weight: 800; text-align: center; margin-bottom: 1.75rem; }
+    .faq-item {
+      background: #fff;
+      border: 1px solid #E2E8F0;
+      border-radius: 0.875rem;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .faq-item h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .faq-item p { font-size: 0.925rem; color: var(--zinc-600); }
+    footer {
+      background: #fff;
+      border-top: 1px solid #E2E8F0;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--zinc-600);
+    }
+    footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="/" class="logo-box">
+      <img src="/logo.png" alt="CafeQR Logo">
+      <span>CafeQR Bakery POS</span>
+    </a>
+    <div class="nav-actions">
+      <a href="https://wa.me/917012120844?text=Hi%20CafeQR!%20I%20run%20a%20bakery/cake%20shop%20and%20want%20a%20live%205-minute%20POS%20demo." target="_blank" rel="noopener noreferrer" class="btn-wa">
+        💬 Book Live Demo
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="badge-pill">🎂 Built for Bakeries, Cake Studios & Sweet Shops</div>
+      <h1>Smart <span>Bakery POS Software</span> with Advance Custom Cake Orders</h1>
+      <p class="lead">Never lose a birthday cake order or miss a delivery deadline. Track weight variants, manage advance deposits, monitor ingredient shelf life, and print professional GST bills effortlessly.</p>
+
+      <div class="hero-ctas">
+        <a href="https://wa.me/917012120844?text=Hi%20CafeQR!%20I%20am%20interested%20in%20Bakery%20POS%20and%20Cake%20Order%20Software." target="_blank" rel="noopener noreferrer" class="cta-primary">
+          📲 Book Free 5-Min WhatsApp Demo
+        </a>
+        <a href="/#pricing" class="cta-secondary">
+          View Hardware Bundles (From ₹4,999)
+        </a>
+      </div>
+
+      <div class="social-proof-bar">
+        <span>⭐ <strong>4.9 / 5.0 Rating</strong> on <a href="https://g.page/r/CbYBpqFk3xOFEBM/review" target="_blank" rel="noopener noreferrer" style="color: #2563EB; text-decoration: underline;">Google Business</a></span>
+        <span>•</span>
+        <span>🍰 <strong>Advance Order Calendar</strong></span>
+        <span>•</span>
+        <span>⚖️ <strong>Weight-Based Pricing</strong></span>
+      </div>
+    </section>
+
+    <section class="card-grid">
+      <div class="feature-card">
+        <h3>Advance Cake Booking Calendar</h3>
+        <p>Record customer name, delivery date/time slot, flavor, customized inscription (e.g. "Happy 1st Birthday Aanya"), and reference design notes. Never misplace a cake book again.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Advance Deposit & Balance Tracker</h3>
+        <p>Accept 50% advance token payments via UPI QR or cash. System automatically prints an advance receipt with balance due clearly highlighted for the customer pickup day.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Weight & Portion Variants</h3>
+        <p>Set up cakes by weight: 0.5 kg, 1 kg, 1.5 kg, or custom per-kg rates. Pastries and dry snacks can be billed per piece or by weight with one tap.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Raw Materials & Baking ERP</h3>
+        <p>Keep track of flour, butter, whipping cream, cocoa, and packaging box stock. Automatically deduct ingredients when cakes are marked finished by the kitchen.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Expiry & Shelf-Life Alerts</h3>
+        <p>Track perishable cream products and display counter pastries. Mark markdowns or discount tags before end of day to minimize bakery food wastage.</p>
+      </div>
+      <div class="feature-card">
+        <h3>SMS / WhatsApp Order Confirmation</h3>
+        <p>Send instant order confirmation receipts and "Your Cake is Ready for Pickup!" WhatsApp updates directly to happy customers.</p>
+      </div>
+    </section>
+
+    <section class="comparison-section">
+      <h2>Why Bakeries Switch to CafeQR</h2>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th class="highlight-col">CafeQR Bakery POS</th>
+              <th>Paper Cake Diary</th>
+              <th>Generic Retail Software</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Cake Order Tracking</strong></td>
+              <td class="highlight-col">Digital calendar with pickup alerts</td>
+              <td>Messy handwritten pages, lost slips</td>
+              <td>Requires clunky manual notes</td>
+            </tr>
+            <tr>
+              <td><strong>Advance vs Due Accounting</strong></td>
+              <td class="highlight-col">Automatic balance calculation & receipt</td>
+              <td>Manual calculation prone to errors</td>
+              <td>Complicated invoice editing</td>
+            </tr>
+            <tr>
+              <td><strong>Weight Pricing (0.5kg / 1kg)</strong></td>
+              <td class="highlight-col">1-tap variant buttons</td>
+              <td>Manual mental math</td>
+              <td>Requires separate barcode per weight</td>
+            </tr>
+            <tr>
+              <td><strong>Counter Printer</strong></td>
+              <td class="highlight-col">Compact wireless 58mm / 80mm Bluetooth</td>
+              <td>Handwritten carbon-copy receipt</td>
+              <td>Large desktop A4 or thermal printer</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-item">
+        <h3>Can our bakers see upcoming cake delivery orders for the day?</h3>
+        <p>Yes. The kitchen view displays upcoming delivery schedules filtered by today, tomorrow, or this weekend so your baking team can prep fresh cakes right on time.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Can we attach special requests like eggless or sugar-free?</h3>
+        <p>Yes. Quick dietary tags like Eggless, Gluten-Free, Less Cream, and Photo Cake are available to attach to any item ticket.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 CafeQR. All rights reserved. • <a href="/">Back to CafeQR Home</a> • <a href="/#pricing">View Hardware Bundles</a> • <a href="https://g.page/r/CbYBpqFk3xOFEBM/review" target="_blank" rel="noopener noreferrer">Google Reviews</a></p>
+  </footer>
+
+</body>
+</html>
