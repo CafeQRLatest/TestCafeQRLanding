@@ -260,11 +260,9 @@ function App() {
       <section className="relative min-h-[90vh] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 pt-12 pb-16">
         <div className="relative z-10 text-center max-w-4xl mx-auto pointer-events-none select-none flex flex-col items-center">
           
-          {/* Google Verified Review Badge */}
+          {/* Google Verified Review Badge (Anchored to on-page reviews) */}
           <a
-            href="https://g.page/r/CbYBpqFk3xOFEBM/review"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#reviews"
             className="mb-4 inline-flex items-center gap-2 px-4 py-1.5 bg-white/90 hover:bg-white backdrop-blur-md border border-zinc-200/80 shadow-sm rounded-full text-xs font-semibold text-zinc-800 transition-all hover:scale-105 pointer-events-auto cursor-pointer"
           >
             <span className="flex items-center justify-center w-4 h-4">
@@ -957,12 +955,10 @@ function App() {
                 🖨️ Thermal Printers (58mm/80mm)
               </a>
               <a
-                href="https://g.page/r/CbYBpqFk3xOFEBM/review"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#reviews"
                 className="px-3 py-1.5 bg-blue-50/90 hover:bg-blue-100 border border-blue-200 rounded-full text-xs font-bold text-blue-700 transition-all shadow-xs"
               >
-                ⭐ Google Reviews (5.0★ • 29 Reviews)
+                ⭐ Customer Reviews (5.0★ • 29 Ratings)
               </a>
             </div>
           </div>
