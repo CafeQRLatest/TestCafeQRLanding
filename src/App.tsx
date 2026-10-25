@@ -275,7 +275,7 @@ function App() {
                 <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.57 1.24 6.57l4.04 3.14c.95-2.83 3.6-4.96 6.72-4.96z" />
               </svg>
             </span>
-            <span>Rated <strong>4.9/5</strong> on Google Business Profile</span>
+            <span>Rated <strong>5.0 / 5.0</strong> on Google Maps (29 Reviews)</span>
             <span className="text-amber-500">★★★★★</span>
           </a>
 
@@ -962,7 +962,7 @@ function App() {
                 rel="noopener noreferrer"
                 className="px-3 py-1.5 bg-blue-50/90 hover:bg-blue-100 border border-blue-200 rounded-full text-xs font-bold text-blue-700 transition-all shadow-xs"
               >
-                ⭐ Google Reviews (4.9★)
+                ⭐ Google Reviews (5.0★ • 29 Reviews)
               </a>
             </div>
           </div>
