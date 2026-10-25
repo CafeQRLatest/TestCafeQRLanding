@@ -9,12 +9,20 @@ interface RealReview {
   date: string;
 }
 
-const row1Reviews: RealReview[] = [
+const allReviews: RealReview[] = [
   {
     id: '1',
     name: 'Dharsan Ram',
     badge: 'Local Guide • 26 reviews',
     quote: 'Using this system for a few months, better than many softwares available in the market, user friendly can use in multiple device and android and windows version which can be used simultaneously. Above all really good customer service. Happy to use cafeqr pos',
+    rating: 5,
+    date: '1 month ago',
+  },
+  {
+    id: '7',
+    name: 'Tax Bridge',
+    badge: 'Business Account',
+    quote: 'Excellent experience with Cafe QR POS & ERP. The system is user-friendly, efficient, and makes managing cafe operations much easier. The features are well-designed and the overall experience has been exceptional. Highly recommended!',
     rating: 5,
     date: '1 month ago',
   },
@@ -27,55 +35,20 @@ const row1Reviews: RealReview[] = [
     date: '2 weeks ago',
   },
   {
-    id: '3',
-    name: 'Aditya Prakash',
-    badge: 'Local Guide • 23 reviews',
-    quote: 'Best support team and easy to use billing software ❤️',
-    rating: 5,
-    date: '1 week ago',
-  },
-  {
-    id: '4',
-    name: 'Ashwin Jinan',
-    badge: '7 reviews • 1 photo',
-    quote: 'Cafe QR handles our daily billing smoothly and keeps order tracking straightforward. It’s a practical, easy-to-use tool that reliably meets our operational needs.',
-    rating: 5,
-    date: '2 weeks ago',
-  },
-  {
-    id: '5',
-    name: 'Sebastian Zacharias',
-    badge: '3 reviews',
-    quote: 'cafe qr is user friendly software with many features. price reasonable with excellent after sales. we recommend cafe qr to other parties also.',
-    rating: 5,
-    date: '1 month ago',
-  },
-  {
-    id: '6',
-    name: 'Babu Francis Ptb',
-    badge: 'Verified Customer • 2 photos',
-    quote: 'I am using cafe QR more than 6 months. Really very good program, easy to use for beginners also',
-    rating: 5,
-    date: '1 month ago',
-  },
-];
-
-const row2Reviews: RealReview[] = [
-  {
-    id: '7',
-    name: 'Tax Bridge',
-    badge: 'Business Account',
-    quote: 'Excellent experience with Cafe QR POS & ERP. The system is user-friendly, efficient, and makes managing cafe operations much easier. The features are well-designed and the overall experience has been exceptional. Highly recommended!',
-    rating: 5,
-    date: '1 month ago',
-  },
-  {
     id: '8',
     name: 'Cma Grp2',
     badge: 'Cafe Owner',
     quote: 'A fantastic POS and ERP solution for cafes. It makes billing, order management, and day-to-day operations smooth and hassle-free. Easy to use, efficient, and highly recommended for cafe businesses.',
     rating: 5,
     date: '1 month ago',
+  },
+  {
+    id: '3',
+    name: 'Aditya Prakash',
+    badge: 'Local Guide • 23 reviews',
+    quote: 'Best support team and easy to use billing software ❤️',
+    rating: 5,
+    date: '1 week ago',
   },
   {
     id: '9',
@@ -86,6 +59,14 @@ const row2Reviews: RealReview[] = [
     date: '1 month ago',
   },
   {
+    id: '4',
+    name: 'Ashwin Jinan',
+    badge: '7 reviews • 1 photo',
+    quote: 'Cafe QR handles our daily billing smoothly and keeps order tracking straightforward. It’s a practical, easy-to-use tool that reliably meets our operational needs.',
+    rating: 5,
+    date: '2 weeks ago',
+  },
+  {
     id: '10',
     name: 'Mk Shakeer',
     badge: '5 reviews • 3 photos',
@@ -94,10 +75,26 @@ const row2Reviews: RealReview[] = [
     date: '1 month ago',
   },
   {
+    id: '5',
+    name: 'Sebastian Zacharias',
+    badge: '3 reviews',
+    quote: 'cafe qr is user friendly software with many features. price reasonable with excellent after sales. we recommend cafe qr to other parties also.',
+    rating: 5,
+    date: '1 month ago',
+  },
+  {
     id: '11',
     name: 'Theertha Sukumar',
     badge: '3 reviews',
     quote: 'I really like how simple CafeQR is to use. It makes ordering quick and convenient without any unnecessary steps.',
+    rating: 5,
+    date: '1 month ago',
+  },
+  {
+    id: '6',
+    name: 'Babu Francis Ptb',
+    badge: 'Verified Customer • 2 photos',
+    quote: 'I am using cafe QR more than 6 months. Really very good program, easy to use for beginners also',
     rating: 5,
     date: '1 month ago',
   },
@@ -113,9 +110,9 @@ const row2Reviews: RealReview[] = [
 
 function ReviewCard({ review }: { review: RealReview }) {
   return (
-    <div className="w-[300px] sm:w-[350px] shrink-0 p-5 rounded-2xl bg-white/90 backdrop-blur-md border border-zinc-200/80 shadow-xs hover:shadow-lg hover:border-zinc-300 transition-all duration-300 flex flex-col justify-between select-none">
+    <div className="w-[280px] sm:w-[330px] shrink-0 p-4 sm:p-5 rounded-2xl bg-white/90 backdrop-blur-md border border-zinc-200/80 shadow-xs hover:shadow-lg hover:border-zinc-300 transition-all duration-300 flex flex-col justify-between select-none">
       <div>
-        <div className="flex items-center justify-between mb-2.5">
+        <div className="flex items-center justify-between mb-2">
           <div className="flex gap-0.5 text-amber-400">
             {[...Array(review.rating)].map((_, idx) => (
               <Star key={idx} className="w-3.5 h-3.5 fill-amber-400" />
@@ -128,8 +125,8 @@ function ReviewCard({ review }: { review: RealReview }) {
         </p>
       </div>
 
-      <div className="pt-3 border-t border-zinc-100 flex items-center gap-2.5">
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/20 to-orange-100 text-primary font-bold text-xs flex items-center justify-center shrink-0 border border-primary/20">
+      <div className="pt-2.5 border-t border-zinc-100 flex items-center gap-2.5">
+        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-primary/20 to-orange-100 text-primary font-bold text-xs flex items-center justify-center shrink-0 border border-primary/20">
           {review.name.charAt(0)}
         </div>
         <div className="min-w-0 flex-1">
@@ -146,9 +143,9 @@ function ReviewCard({ review }: { review: RealReview }) {
 
 export default function GoogleReviewsSection() {
   return (
-    <section id="reviews" className="py-20 sm:py-24 border-t border-white/20 relative z-10 overflow-hidden bg-gradient-to-b from-transparent via-white/30 to-transparent">
+    <section id="reviews" className="py-16 sm:py-20 border-t border-white/20 relative z-10 overflow-hidden bg-gradient-to-b from-transparent via-white/30 to-transparent">
       {/* Header */}
-      <div className="text-center max-w-3xl mx-auto px-4 sm:px-6 mb-12">
+      <div className="text-center max-w-3xl mx-auto px-4 sm:px-6 mb-10">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-white/90 backdrop-blur-md border border-zinc-200 shadow-2xs rounded-full text-xs font-bold text-zinc-800 mb-3">
           <span className="flex items-center justify-center w-3.5 h-3.5">
             <svg viewBox="0 0 24 24" className="w-3.5 h-3.5">
@@ -181,23 +178,16 @@ export default function GoogleReviewsSection() {
         </div>
       </div>
 
-      {/* Modern Auto-Scrolling Infinite Marquee Ticker with Edge Fades */}
-      <div className="relative w-full overflow-hidden pause-on-hover py-2">
+      {/* Modern Auto-Scrolling Single-Row Infinite Marquee Ticker with Edge Fades */}
+      <div className="relative w-full overflow-hidden pause-on-hover py-3">
         {/* Left and Right Edge Fade Masks */}
         <div className="pointer-events-none absolute inset-y-0 left-0 w-12 sm:w-28 bg-gradient-to-r from-zinc-50 via-zinc-50/80 to-transparent z-20" />
         <div className="pointer-events-none absolute inset-y-0 right-0 w-12 sm:w-28 bg-gradient-to-l from-zinc-50 via-zinc-50/80 to-transparent z-20" />
 
-        {/* Row 1: Leftward Marquee */}
-        <div className="mb-4 flex gap-4 animate-marquee">
-          {[...row1Reviews, ...row1Reviews].map((r, index) => (
-            <ReviewCard key={`r1-${index}`} review={r} />
-          ))}
-        </div>
-
-        {/* Row 2: Rightward Marquee (Opposite direction for balanced visual rhythm) */}
-        <div className="flex gap-4 animate-marquee-reverse">
-          {[...row2Reviews, ...row2Reviews].map((r, index) => (
-            <ReviewCard key={`r2-${index}`} review={r} />
+        {/* Single Sleek Industry-Standard Infinite Marquee */}
+        <div className="flex gap-4 animate-marquee">
+          {[...allReviews, ...allReviews].map((r, index) => (
+            <ReviewCard key={`rev-${index}`} review={r} />
           ))}
         </div>
       </div>
