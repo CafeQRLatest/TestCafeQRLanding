@@ -21,6 +21,17 @@ import {
   CreditCard,
   RotateCcw,
   Loader2,
+  Package,
+  Settings2,
+  Receipt,
+  BatteryMedium,
+  Sparkles,
+  Coffee,
+  Cake,
+  FileText,
+  LogIn,
+  HelpCircle,
+  Mail,
 } from 'lucide-react';
 import CheckoutModal from './components/CheckoutModal';
 import FAQ from './components/FAQ';
@@ -238,6 +249,17 @@ function App() {
           <img src="/logo.png" alt="Cafe QR Logo" className="w-10 h-10 object-contain rounded-md" />
           <span className="text-xl font-bold tracking-tight text-zinc-900">Cafe QR ERP</span>
         </div>
+
+        {/* Desktop Navigation Anchors */}
+        <div className="hidden md:flex items-center gap-6 text-sm font-semibold text-zinc-600">
+          <a href="#how-it-works" className="hover:text-primary transition-colors">How It Works</a>
+          <a href="#pricing" className="hover:text-primary transition-colors">Pricing</a>
+          <a href="#features" className="hover:text-primary transition-colors">Features</a>
+          <a href="#apps" className="hover:text-primary transition-colors">Live Demo</a>
+          <a href="#reviews" className="hover:text-primary transition-colors">Reviews</a>
+          <a href="#faq" className="hover:text-primary transition-colors">FAQ</a>
+        </div>
+
         <div className="flex items-center gap-4">
           <a
             href="https://wa.me/917012120844?text=Hi%20CafeQR!%20I%20run%20a%20restaurant/cafe%20and%20would%20like%20a%20free%205-minute%20live%20demo%20and%20pricing%20details."
@@ -273,7 +295,7 @@ function App() {
                 <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.57 1.24 6.57l4.04 3.14c.95-2.83 3.6-4.96 6.72-4.96z" />
               </svg>
             </span>
-            <span>Rated <strong>5.0 / 5.0</strong> on Google Maps (29 Reviews)</span>
+            <span>Rated <strong>5.0 / 5.0</strong> on Google Business • 100% 5-Star Feedback</span>
             <span className="text-amber-500">★★★★★</span>
           </a>
 
@@ -281,9 +303,10 @@ function App() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="mb-6 px-4 py-1.5 bg-white/70 backdrop-blur-md border border-white/50 shadow-sm rounded-full text-xs font-bold uppercase tracking-wider text-primary"
+            className="mb-6 px-4 py-1.5 bg-white/70 backdrop-blur-md border border-white/50 shadow-sm rounded-full text-xs font-bold uppercase tracking-wider text-primary flex items-center gap-1.5"
           >
-            ✦ Complete POS Kit — Software + Printer
+            <Sparkles className="w-3.5 h-3.5 text-primary fill-primary" />
+            <span>Complete POS Kit — Software + Printer</span>
           </motion.div>
 
           <motion.h1
@@ -309,7 +332,7 @@ function App() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
-            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3.5 pointer-events-auto w-full max-w-lg mx-auto"
+            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3.5 pointer-events-auto w-full max-w-md mx-auto"
           >
             <a
               href="https://wa.me/917012120844?text=Hi%20CafeQR!%20I%20run%20a%20restaurant/cafe%20and%20would%20like%20a%20free%205-minute%20live%20demo%20and%20pricing%20details."
@@ -325,18 +348,19 @@ function App() {
             >
               See Pricing & Kits <ChevronRight className="w-4 h-4" />
             </a>
-            <a
-              href={posLoginUrl}
-              className="w-full sm:w-auto px-5 py-4 bg-white/90 hover:bg-white border border-zinc-200 text-zinc-700 rounded-full font-bold flex items-center justify-center gap-1.5 transition-all shadow-sm text-sm cursor-pointer"
-            >
-              Login
-            </a>
           </motion.div>
+
+          {/* Micro-Trust Reassurance Bar */}
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-zinc-500 font-medium pointer-events-auto">
+            <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-emerald-600" /> Free Doorstep Delivery</span>
+            <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-emerald-600" /> 1-Year Hardware Warranty</span>
+            <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-emerald-600" /> Free Menu Setup & Onboarding</span>
+          </div>
         </div>
       </section>
 
       {/* ── How It Works ───────────────────────────────────────────── */}
-      <section className="py-32 px-4 sm:px-6 lg:px-8 border-t border-white/20">
+      <section id="how-it-works" className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 border-t border-white/20">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-zinc-900">
@@ -347,9 +371,9 @@ function App() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { step: '01', title: 'Choose Your Kit', desc: 'Pick a Starter or Pro kit with a Bluetooth printer, or get software only if you already have one.', icon: '📦' },
-              { step: '02', title: 'We Set You Up', desc: 'Our team configures your menu, categories, and POS settings. You just share your details.', icon: '⚙️' },
-              { step: '03', title: 'Start Billing', desc: "Install the app, connect your printer, and start taking orders. It's that simple.", icon: '🧾' },
+              { step: '01', title: 'Choose Your Kit', desc: 'Pick a Starter or Pro kit with a Bluetooth printer, or get software only if you already have one.', icon: Package },
+              { step: '02', title: 'We Set You Up', desc: 'Our team configures your menu, categories, and POS settings. You just share your details.', icon: Settings2 },
+              { step: '03', title: 'Start Billing', desc: "Install the app, connect your printer, and start taking orders. It's that simple.", icon: Receipt },
             ].map((s, i) => (
               <motion.div
                 key={i}
@@ -359,7 +383,9 @@ function App() {
                 transition={{ duration: 0.5, delay: i * 0.15 }}
                 className="relative p-8 rounded-[2rem] bg-white/60 backdrop-blur-xl border border-white/60 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:bg-white/80 transition-all text-center"
               >
-                <span className="text-4xl mb-4 block">{s.icon}</span>
+                <div className="w-14 h-14 mx-auto mb-5 rounded-2xl bg-orange-50 border border-orange-100/80 flex items-center justify-center text-primary shadow-xs">
+                  <s.icon className="w-6 h-6 stroke-[1.8]" />
+                </div>
                 <span className="text-xs font-bold text-primary uppercase tracking-widest">Step {s.step}</span>
                 <h3 className="text-xl font-bold text-zinc-900 mt-2 mb-2">{s.title}</h3>
                 <p className="text-zinc-600 text-sm leading-relaxed">{s.desc}</p>
@@ -370,7 +396,7 @@ function App() {
       </section>
 
       {/* ── Pricing Bundles ────────────────────────────────────────── */}
-      <section id="pricing" className="py-32 px-4 sm:px-6 lg:px-8 border-t border-white/20">
+      <section id="pricing" className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 border-t border-white/20">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-zinc-900">
@@ -415,7 +441,7 @@ function App() {
                         if (parent && !parent.querySelector('.printer-fallback')) {
                           const div = document.createElement('div');
                           div.className = 'printer-fallback flex flex-col items-center justify-center text-center p-4';
-                          div.innerHTML = `<span class="text-4xl">🖨️</span><span class="text-xs font-bold mt-2 ${plan.highlight ? 'text-zinc-300' : 'text-zinc-600'}">${plan.printer}</span>`;
+                          div.innerHTML = `<span class="text-xs font-bold ${plan.highlight ? 'text-zinc-300' : 'text-zinc-600'}">${plan.printer}</span>`;
                           parent.appendChild(div);
                         }
                       }}
@@ -433,7 +459,7 @@ function App() {
                         if (parent && !parent.querySelector('.software-fallback')) {
                           const div = document.createElement('div');
                           div.className = 'software-fallback flex flex-col items-center justify-center text-center';
-                          div.innerHTML = `<span class="text-4xl">📱</span>`;
+                          div.innerHTML = `<span class="text-xs font-bold text-zinc-400">Software License Only</span>`;
                           parent.insertBefore(div, parent.firstChild);
                         }
                       }}
@@ -498,7 +524,7 @@ function App() {
       </section>
 
       {/* ── Key Features Grid ──────────────────────────────────────── */}
-      <section className="py-32 px-4 sm:px-6 lg:px-8 border-t border-white/20">
+      <section id="features" className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 border-t border-white/20">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-zinc-900">
@@ -531,7 +557,7 @@ function App() {
       </section>
 
       {/* ── Play Store Apps Section ────────────────────────────────── */}
-      <section id="apps" className="py-32 px-4 sm:px-6 lg:px-8 border-t border-white/20">
+      <section id="apps" className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 border-t border-white/20">
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
@@ -620,7 +646,7 @@ function App() {
                     <span className="text-white">11:40 AM</span>
                     <div className="flex gap-1.5 text-white items-center">
                       <Wifi className="w-3 h-3" />
-                      <span>🔋</span>
+                      <BatteryMedium className="w-3.5 h-3.5 text-white stroke-[2]" />
                     </div>
                   </div>
 
@@ -916,83 +942,215 @@ function App() {
       <FAQ />
 
       {/* ── Footer ─────────────────────────────────────────────────── */}
-      <footer className="border-t border-white/40 pt-12 pb-28 sm:pb-14 px-4 text-center text-zinc-500 text-sm bg-white/50 backdrop-blur-xl relative z-10">
-        <div className="max-w-7xl mx-auto space-y-8">
-          {/* Solutions Category Pills */}
-          <div className="space-y-3">
-            <span className="text-zinc-400 uppercase tracking-wider text-[10px] sm:text-[11px] font-bold block">
-              Industry Solutions & Hardware Guides
-            </span>
-            <div className="flex flex-wrap justify-center items-center gap-2 max-w-3xl mx-auto">
-              <a
-                href="/pos-for-restaurants/"
-                className="px-3 py-1.5 bg-white/80 hover:bg-white border border-zinc-200/90 rounded-full text-xs font-semibold text-zinc-700 hover:text-primary transition-all shadow-xs"
-              >
-                🍽️ Restaurants & Dining
-              </a>
-              <a
-                href="/pos-for-cafes/"
-                className="px-3 py-1.5 bg-white/80 hover:bg-white border border-zinc-200/90 rounded-full text-xs font-semibold text-zinc-700 hover:text-primary transition-all shadow-xs"
-              >
-                ☕ Cafes & QSR
-              </a>
-              <a
-                href="/pos-for-bakeries/"
-                className="px-3 py-1.5 bg-white/80 hover:bg-white border border-zinc-200/90 rounded-full text-xs font-semibold text-zinc-700 hover:text-primary transition-all shadow-xs"
-              >
-                🎂 Bakeries & Cake Studios
-              </a>
-              <a
-                href="/pos-for-food-trucks/"
-                className="px-3 py-1.5 bg-white/80 hover:bg-white border border-zinc-200/90 rounded-full text-xs font-semibold text-zinc-700 hover:text-primary transition-all shadow-xs"
-              >
-                🚚 Food Trucks & Stalls
-              </a>
-              <a
-                href="/bluetooth-thermal-printer-billing/"
-                className="px-3 py-1.5 bg-white/80 hover:bg-white border border-zinc-200/90 rounded-full text-xs font-semibold text-zinc-700 hover:text-primary transition-all shadow-xs"
-              >
-                🖨️ Thermal Printers (58mm/80mm)
-              </a>
-              <a
-                href="#reviews"
-                className="px-3 py-1.5 bg-blue-50/90 hover:bg-blue-100 border border-blue-200 rounded-full text-xs font-bold text-blue-700 transition-all shadow-xs"
-              >
-                ⭐ Customer Reviews (5.0★ • 29 Ratings)
-              </a>
+      <footer className="border-t border-white/40 pt-16 pb-28 sm:pb-14 px-4 sm:px-6 lg:px-8 text-zinc-600 text-sm bg-white/60 backdrop-blur-xl relative z-10">
+        <div className="max-w-7xl mx-auto">
+          {/* 4-Column Professional B2B SaaS Footer */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-zinc-200/70 text-left">
+            {/* Column 1: Industry Solutions */}
+            <div className="space-y-4">
+              <h4 className="text-xs font-bold text-zinc-900 uppercase tracking-wider">
+                Industry Solutions
+              </h4>
+              <ul className="space-y-2.5 text-xs font-medium">
+                <li>
+                  <a
+                    href="/pos-for-restaurants/"
+                    className="group flex items-center gap-2 text-zinc-600 hover:text-primary transition-colors"
+                  >
+                    <UtensilsCrossed className="w-3.5 h-3.5 text-zinc-400 group-hover:text-primary transition-colors shrink-0" />
+                    <span>Restaurants & Dining</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/pos-for-cafes/"
+                    className="group flex items-center gap-2 text-zinc-600 hover:text-primary transition-colors"
+                  >
+                    <Coffee className="w-3.5 h-3.5 text-zinc-400 group-hover:text-primary transition-colors shrink-0" />
+                    <span>Cafes & Quick Service</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/pos-for-bakeries/"
+                    className="group flex items-center gap-2 text-zinc-600 hover:text-primary transition-colors"
+                  >
+                    <Cake className="w-3.5 h-3.5 text-zinc-400 group-hover:text-primary transition-colors shrink-0" />
+                    <span>Bakeries & Cake Studios</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/pos-for-food-trucks/"
+                    className="group flex items-center gap-2 text-zinc-600 hover:text-primary transition-colors"
+                  >
+                    <Truck className="w-3.5 h-3.5 text-zinc-400 group-hover:text-primary transition-colors shrink-0" />
+                    <span>Food Trucks & Kiosks</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#pricing"
+                    className="group flex items-center gap-2 text-zinc-600 hover:text-primary transition-colors"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-zinc-400 group-hover:text-primary transition-colors shrink-0" />
+                    <span>Retail & Specialty Billing</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Column 2: Hardware & Kits */}
+            <div className="space-y-4">
+              <h4 className="text-xs font-bold text-zinc-900 uppercase tracking-wider">
+                Hardware & Kits
+              </h4>
+              <ul className="space-y-2.5 text-xs font-medium">
+                <li>
+                  <a
+                    href="#pricing"
+                    className="group flex items-center gap-2 text-zinc-600 hover:text-primary transition-colors"
+                  >
+                    <Printer className="w-3.5 h-3.5 text-zinc-400 group-hover:text-primary transition-colors shrink-0" />
+                    <span>Starter 58mm Thermal Kit</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#pricing"
+                    className="group flex items-center gap-2 text-zinc-600 hover:text-primary transition-colors"
+                  >
+                    <Printer className="w-3.5 h-3.5 text-zinc-400 group-hover:text-primary transition-colors shrink-0" />
+                    <span>Pro 80mm High-Speed Kit</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#pricing"
+                    className="group flex items-center gap-2 text-zinc-600 hover:text-primary transition-colors"
+                  >
+                    <Smartphone className="w-3.5 h-3.5 text-zinc-400 group-hover:text-primary transition-colors shrink-0" />
+                    <span>Software Only License</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/bluetooth-thermal-printer-billing/"
+                    className="group flex items-center gap-2 text-zinc-600 hover:text-primary transition-colors"
+                  >
+                    <FileText className="w-3.5 h-3.5 text-zinc-400 group-hover:text-primary transition-colors shrink-0" />
+                    <span>Thermal Printer Guide</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Column 3: Resources & Trust */}
+            <div className="space-y-4">
+              <h4 className="text-xs font-bold text-zinc-900 uppercase tracking-wider">
+                Resources & Portals
+              </h4>
+              <ul className="space-y-2.5 text-xs font-medium">
+                <li>
+                  <a
+                    href="#reviews"
+                    className="group flex items-center gap-2 text-zinc-600 hover:text-primary transition-colors"
+                  >
+                    <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500 shrink-0" />
+                    <span>5.0★ Google Verified Reviews</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/blog/best-pos-billing-software-2026/"
+                    className="group flex items-center gap-2 text-zinc-600 hover:text-primary transition-colors"
+                  >
+                    <FileText className="w-3.5 h-3.5 text-zinc-400 group-hover:text-primary transition-colors shrink-0" />
+                    <span>Best POS Software 2026</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={typeof window !== 'undefined' && (window.location.hostname.includes('test') || window.location.hostname.includes('localhost')) ? 'https://cafe-test-qr-frontend.vercel.app/login' : 'https://cafeqr-frontend.pages.dev/login/'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center gap-2 text-zinc-600 hover:text-primary transition-colors"
+                  >
+                    <LogIn className="w-3.5 h-3.5 text-zinc-400 group-hover:text-primary transition-colors shrink-0" />
+                    <span>POS Cloud Merchant Login</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#faq"
+                    className="group flex items-center gap-2 text-zinc-600 hover:text-primary transition-colors"
+                  >
+                    <HelpCircle className="w-3.5 h-3.5 text-zinc-400 group-hover:text-primary transition-colors shrink-0" />
+                    <span>Frequently Asked Questions</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Column 4: Support & Legal */}
+            <div className="space-y-4">
+              <h4 className="text-xs font-bold text-zinc-900 uppercase tracking-wider">
+                Direct Support & Legal
+              </h4>
+              <ul className="space-y-2.5 text-xs font-medium">
+                <li>
+                  <a
+                    href="https://wa.me/917012120844?text=Hi%20CafeQR!%20I%20need%20support/demo%20assistance."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center gap-2 text-emerald-700 hover:text-emerald-800 transition-colors"
+                  >
+                    <MessageCircle className="w-3.5 h-3.5 fill-current shrink-0" />
+                    <span>WhatsApp: +91 70121 20844</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="mailto:support@cafeqr.in"
+                    className="group flex items-center gap-2 text-zinc-600 hover:text-primary transition-colors"
+                  >
+                    <Mail className="w-3.5 h-3.5 text-zinc-400 group-hover:text-primary transition-colors shrink-0" />
+                    <span>support@cafeqr.in</span>
+                  </a>
+                </li>
+                <li className="flex items-center gap-2 text-zinc-500">
+                  <MapPin className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
+                  <span>Thrissur, Kerala, India</span>
+                </li>
+                <li>
+                  <a
+                    href="#terms"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.location.hash = 'terms';
+                      setCurrentView('terms');
+                      window.scrollTo(0, 0);
+                    }}
+                    className="group flex items-center gap-2 text-zinc-600 hover:text-primary transition-colors"
+                  >
+                    <Shield className="w-3.5 h-3.5 text-zinc-400 group-hover:text-primary transition-colors shrink-0" />
+                    <span>Terms & Refund Policy</span>
+                  </a>
+                </li>
+              </ul>
             </div>
           </div>
 
-          {/* Legal & Copyright */}
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-zinc-200/60 text-xs text-zinc-500">
+          {/* Sub-Footer / Copyright */}
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-8 text-xs text-zinc-500">
             <div className="flex items-center gap-2.5">
               <img src="/logo.png" alt="Cafe QR Logo" className="w-7 h-7 object-contain rounded-md" />
-              <span className="font-bold text-zinc-800 text-sm">Cafe QR POS ERP Ecosystem</span>
+              <span className="font-bold text-zinc-800 text-sm">Cafe QR POS System</span>
             </div>
-            <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 text-xs">
-              <a
-                href="/blog/best-pos-billing-software-2026/"
-                className="text-zinc-600 hover:text-zinc-900 font-medium transition-colors"
-              >
-                Blog & POS Guide
-              </a>
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-zinc-500">
+              <span>© {new Date().getFullYear()} Cafe QR. All rights reserved.</span>
               <span className="text-zinc-300 hidden sm:inline">•</span>
-              <a
-                href="#terms"
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.location.hash = 'terms';
-                  setCurrentView('terms');
-                  window.scrollTo(0, 0);
-                }}
-                className="text-zinc-600 hover:text-zinc-900 font-medium transition-colors"
-              >
-                Terms & Conditions
-              </a>
-              <span className="text-zinc-300 hidden sm:inline">•</span>
-              <p className="w-full sm:w-auto text-zinc-400 text-center">
-                © {new Date().getFullYear()} Cafe QR. All rights reserved.
-              </p>
+              <span className="text-zinc-400">Made for Growing Businesses in India</span>
             </div>
           </div>
         </div>

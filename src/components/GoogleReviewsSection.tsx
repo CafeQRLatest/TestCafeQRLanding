@@ -143,7 +143,7 @@ function ReviewCard({ review }: { review: RealReview }) {
 
 export default function GoogleReviewsSection() {
   return (
-    <section id="reviews" className="py-16 sm:py-20 border-t border-white/20 relative z-10 overflow-hidden bg-gradient-to-b from-transparent via-white/30 to-transparent">
+    <section id="reviews" className="py-12 sm:py-16 border-t border-white/20 relative z-10 overflow-hidden bg-gradient-to-b from-transparent via-white/30 to-transparent">
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto px-4 sm:px-6 mb-10">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-white/90 backdrop-blur-md border border-zinc-200 shadow-2xs rounded-full text-xs font-bold text-zinc-800 mb-3">
@@ -170,10 +170,10 @@ export default function GoogleReviewsSection() {
           </span>
           <span className="font-extrabold text-zinc-900 text-base">5.0 / 5.0</span>
           <span className="text-zinc-400">•</span>
-          <span className="font-semibold text-zinc-700">29 Google Business Reviews</span>
+          <span className="font-semibold text-zinc-700">100% 5-Star Google Feedback</span>
           <span className="text-zinc-400 hidden sm:inline">•</span>
           <span className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200/80 rounded-full text-xs font-bold">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> 100% Verified
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> Verified Customer Reviews
           </span>
         </div>
       </div>
@@ -215,7 +215,7 @@ export default function GoogleReviewsSection() {
         </div>
         <p className="text-[11px] sm:text-xs text-zinc-500 flex items-center gap-1.5 mt-1 font-medium">
           <Shield className="w-3.5 h-3.5 text-emerald-600" />
-          <span>Real, unedited feedback from active cafes, restaurants & bakeries across India</span>
+          <span>Real, unedited feedback from active businesses across India</span>
         </p>
       </div>
     </section>
