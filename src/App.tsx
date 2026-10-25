@@ -918,36 +918,69 @@ function App() {
       <FAQ />
 
       {/* ── Footer ─────────────────────────────────────────────────── */}
-      <footer className="border-t border-white/30 py-12 px-4 text-center text-zinc-500 text-sm bg-white/40 backdrop-blur-xl relative z-10">
-        <div className="max-w-7xl mx-auto space-y-6">
-          <div className="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 text-xs font-semibold text-zinc-600">
-            <span className="text-zinc-400 uppercase tracking-wider text-[11px] font-bold">Solutions:</span>
-            <a href="/pos-for-restaurants/" className="hover:text-primary transition-colors">Restaurants</a>
-            <span className="text-zinc-300">•</span>
-            <a href="/pos-for-cafes/" className="hover:text-primary transition-colors">Cafes & QSR</a>
-            <span className="text-zinc-300">•</span>
-            <a href="/pos-for-bakeries/" className="hover:text-primary transition-colors">Bakeries</a>
-            <span className="text-zinc-300">•</span>
-            <a href="/pos-for-food-trucks/" className="hover:text-primary transition-colors">Food Trucks</a>
-            <span className="text-zinc-300">•</span>
-            <a href="/bluetooth-thermal-printer-billing/" className="hover:text-primary transition-colors">Thermal Printers</a>
-            <span className="text-zinc-300">•</span>
-            <a href="https://g.page/r/CbYBpqFk3xOFEBM/review" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 transition-colors">Google Reviews (4.9★)</a>
+      <footer className="border-t border-white/40 pt-12 pb-28 sm:pb-14 px-4 text-center text-zinc-500 text-sm bg-white/50 backdrop-blur-xl relative z-10">
+        <div className="max-w-7xl mx-auto space-y-8">
+          {/* Solutions Category Pills */}
+          <div className="space-y-3">
+            <span className="text-zinc-400 uppercase tracking-wider text-[10px] sm:text-[11px] font-bold block">
+              Industry Solutions & Hardware Guides
+            </span>
+            <div className="flex flex-wrap justify-center items-center gap-2 max-w-3xl mx-auto">
+              <a
+                href="/pos-for-restaurants/"
+                className="px-3 py-1.5 bg-white/80 hover:bg-white border border-zinc-200/90 rounded-full text-xs font-semibold text-zinc-700 hover:text-primary transition-all shadow-xs"
+              >
+                🍽️ Restaurants & Dining
+              </a>
+              <a
+                href="/pos-for-cafes/"
+                className="px-3 py-1.5 bg-white/80 hover:bg-white border border-zinc-200/90 rounded-full text-xs font-semibold text-zinc-700 hover:text-primary transition-all shadow-xs"
+              >
+                ☕ Cafes & QSR
+              </a>
+              <a
+                href="/pos-for-bakeries/"
+                className="px-3 py-1.5 bg-white/80 hover:bg-white border border-zinc-200/90 rounded-full text-xs font-semibold text-zinc-700 hover:text-primary transition-all shadow-xs"
+              >
+                🎂 Bakeries & Cake Studios
+              </a>
+              <a
+                href="/pos-for-food-trucks/"
+                className="px-3 py-1.5 bg-white/80 hover:bg-white border border-zinc-200/90 rounded-full text-xs font-semibold text-zinc-700 hover:text-primary transition-all shadow-xs"
+              >
+                🚚 Food Trucks & Stalls
+              </a>
+              <a
+                href="/bluetooth-thermal-printer-billing/"
+                className="px-3 py-1.5 bg-white/80 hover:bg-white border border-zinc-200/90 rounded-full text-xs font-semibold text-zinc-700 hover:text-primary transition-all shadow-xs"
+              >
+                🖨️ Thermal Printers (58mm/80mm)
+              </a>
+              <a
+                href="https://g.page/r/CbYBpqFk3xOFEBM/review"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-1.5 bg-blue-50/90 hover:bg-blue-100 border border-blue-200 rounded-full text-xs font-bold text-blue-700 transition-all shadow-xs"
+              >
+                ⭐ Google Reviews (4.9★)
+              </a>
+            </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-6 pt-4 border-t border-zinc-200/50">
-            <div className="flex items-center gap-3">
-              <img src="/logo.png" alt="Cafe QR Logo" className="w-8 h-8 object-contain rounded-md" />
-              <span className="font-bold text-zinc-900">Cafe QR POS ERP Ecosystem</span>
+          {/* Legal & Copyright */}
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-zinc-200/60 text-xs text-zinc-500">
+            <div className="flex items-center gap-2.5">
+              <img src="/logo.png" alt="Cafe QR Logo" className="w-7 h-7 object-contain rounded-md" />
+              <span className="font-bold text-zinc-800 text-sm">Cafe QR POS ERP Ecosystem</span>
             </div>
-            <div className="flex items-center gap-4 text-xs">
+            <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 text-xs">
               <a
                 href="/blog/best-pos-billing-software-2026/"
-                className="text-zinc-500 hover:text-zinc-700 font-medium transition-colors cursor-pointer"
+                className="text-zinc-600 hover:text-zinc-900 font-medium transition-colors"
               >
-                Read our Blog
+                Blog & POS Guide
               </a>
-              <span className="text-zinc-300">•</span>
+              <span className="text-zinc-300 hidden sm:inline">•</span>
               <a
                 href="#terms"
                 onClick={(e) => {
@@ -956,12 +989,14 @@ function App() {
                   setCurrentView('terms');
                   window.scrollTo(0, 0);
                 }}
-                className="text-zinc-500 hover:text-zinc-700 font-medium transition-colors cursor-pointer"
+                className="text-zinc-600 hover:text-zinc-900 font-medium transition-colors"
               >
                 Terms & Conditions
               </a>
-              <span className="text-zinc-300">•</span>
-              <p>© {new Date().getFullYear()} Cafe QR. All rights reserved.</p>
+              <span className="text-zinc-300 hidden sm:inline">•</span>
+              <p className="w-full sm:w-auto text-zinc-400 text-center">
+                © {new Date().getFullYear()} Cafe QR. All rights reserved.
+              </p>
             </div>
           </div>
         </div>
