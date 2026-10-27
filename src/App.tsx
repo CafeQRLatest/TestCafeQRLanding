@@ -282,22 +282,6 @@ function App() {
       <section className="relative min-h-[90vh] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 pt-12 pb-16">
         <div className="relative z-10 text-center max-w-4xl mx-auto pointer-events-none select-none flex flex-col items-center">
           
-          {/* Google Verified Review Badge (Anchored to on-page reviews) */}
-          <a
-            href="#reviews"
-            className="mb-4 inline-flex items-center gap-2 px-4 py-1.5 bg-white/90 hover:bg-white backdrop-blur-md border border-zinc-200/80 shadow-sm rounded-full text-xs font-semibold text-zinc-800 transition-all hover:scale-105 pointer-events-auto cursor-pointer"
-          >
-            <span className="flex items-center justify-center w-4 h-4">
-              <svg viewBox="0 0 24 24" className="w-4 h-4">
-                <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.65v3.03h3.88c2.28-2.1 3.665-5.2 3.665-9.12z" />
-                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.03c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.24v3.13C3.26 21.43 7.33 24 12 24z" />
-                <path fill="#FBBC05" d="M5.28 14.29c-.25-.72-.38-1.49-.38-2.29s.13-1.57.38-2.29V6.57H1.24C.45 8.14 0 9.97 0 12s.45 3.86 1.24 5.43l4.04-3.14z" />
-                <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.57 1.24 6.57l4.04 3.14c.95-2.83 3.6-4.96 6.72-4.96z" />
-              </svg>
-            </span>
-            <span>Rated <strong>5.0 / 5.0</strong> on Google Business • 100% 5-Star Feedback</span>
-            <span className="text-amber-500">★★★★★</span>
-          </a>
 
           <motion.div
             initial={{ opacity: 0, y: 15 }}
