@@ -281,7 +281,7 @@ function App() {
       {/* ── Hero Section ───────────────────────────────────────────── */}
       <section className="relative min-h-[90vh] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 pt-12 pb-16">
         <div className="relative z-10 text-center max-w-4xl mx-auto pointer-events-none select-none flex flex-col items-center">
-          
+
 
           <motion.div
             initial={{ opacity: 0, y: 15 }}
@@ -332,13 +332,6 @@ function App() {
               See Pricing & Kits
             </a>
           </motion.div>
-
-          {/* Micro-Trust Reassurance Bar */}
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-zinc-500 font-medium pointer-events-auto">
-            <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-emerald-600" /> Free Doorstep Delivery</span>
-            <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-emerald-600" /> 1-Year Hardware Warranty</span>
-            <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-emerald-600" /> Free Menu Setup & Onboarding</span>
-          </div>
         </div>
       </section>
 
@@ -398,11 +391,10 @@ function App() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className={`relative p-8 rounded-[2rem] border backdrop-blur-xl flex flex-col transition-all ${
-                  plan.highlight
+                className={`relative p-8 rounded-[2rem] border backdrop-blur-xl flex flex-col transition-all ${plan.highlight
                     ? 'bg-zinc-900/90 border-zinc-700/50 text-white shadow-2xl scale-[1.03] ring-2 ring-primary/30'
                     : 'bg-white/70 border-white/60 shadow-[0_8px_30px_rgba(0,0,0,0.04)]'
-                }`}
+                  }`}
               >
                 {/* Badge */}
                 {plan.badge && (
@@ -484,11 +476,10 @@ function App() {
                 {/* CTA */}
                 <button
                   onClick={() => setCheckoutPlan(plan)}
-                  className={`w-full py-4 rounded-xl font-bold text-sm transition-all ${
-                    plan.highlight
+                  className={`w-full py-4 rounded-xl font-bold text-sm transition-all ${plan.highlight
                       ? 'bg-primary text-white hover:bg-orange-600 shadow-lg shadow-orange-500/30'
                       : 'bg-zinc-900 text-white hover:bg-zinc-800 shadow-md'
-                  }`}
+                    }`}
                 >
                   Get Started
                 </button>
@@ -555,11 +546,10 @@ function App() {
                 {/* POS App Card */}
                 <div
                   onClick={() => setActiveApp('pos')}
-                  className={`flex gap-5 items-start p-6 rounded-3xl border transition-all duration-300 cursor-pointer select-none ${
-                    activeApp === 'pos'
+                  className={`flex gap-5 items-start p-6 rounded-3xl border transition-all duration-300 cursor-pointer select-none ${activeApp === 'pos'
                       ? 'bg-white/95 border-primary/40 shadow-[0_8px_30px_rgba(0,0,0,0.06)] scale-[1.02]'
                       : 'bg-white/10 border-transparent hover:bg-white/40'
-                  }`}
+                    }`}
                 >
                   <img src="/logo-pos.png" alt="POS App Logo" className="w-16 h-16 object-contain bg-white rounded-2xl shadow-sm border border-zinc-200 p-1 shrink-0" />
                   <div className="flex-1">
@@ -583,11 +573,10 @@ function App() {
                 {/* Delivery App Card */}
                 <div
                   onClick={() => setActiveApp('delivery')}
-                  className={`flex gap-5 items-start p-6 rounded-3xl border transition-all duration-300 cursor-pointer select-none ${
-                    activeApp === 'delivery'
+                  className={`flex gap-5 items-start p-6 rounded-3xl border transition-all duration-300 cursor-pointer select-none ${activeApp === 'delivery'
                       ? 'bg-white/95 border-primary/40 shadow-[0_8px_30px_rgba(0,0,0,0.06)] scale-[1.02]'
                       : 'bg-white/10 border-transparent hover:bg-white/40'
-                  }`}
+                    }`}
                 >
                   <img src="/logo-delivery.png" alt="Delivery App Logo" className="w-16 h-16 object-contain bg-white rounded-2xl shadow-sm border border-zinc-200 p-1 shrink-0" />
                   <div className="flex-1">
@@ -731,11 +720,10 @@ function App() {
                                   <button
                                     key={method}
                                     onClick={() => setSettleMethod(method)}
-                                    className={`py-1 text-[9.5px] font-bold rounded-lg transition-all flex items-center justify-center gap-1 ${
-                                      settleMethod === method
+                                    className={`py-1 text-[9.5px] font-bold rounded-lg transition-all flex items-center justify-center gap-1 ${settleMethod === method
                                         ? 'bg-white text-zinc-900 shadow-sm'
                                         : 'text-zinc-500 hover:text-zinc-800'
-                                    }`}
+                                      }`}
                                   >
                                     {method === 'UPI' && <QrCode className="w-2.5 h-2.5 text-primary" />}
                                     {method === 'CASH' && <Banknote className="w-2.5 h-2.5 text-emerald-600" />}
